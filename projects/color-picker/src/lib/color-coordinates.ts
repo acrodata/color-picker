@@ -1,94 +1,83 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  Output,
-  inject,
-} from '@angular/core';
+import { Directive, ElementRef, OnDestroy, OnInit, Output, inject } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
+export interface CoordinatesChangeEvent {
+  x: number;
+  y: number;
+  top: number;
+  left: number;
+  containerWidth: number;
+  containerHeight: number;
+  $event: Event;
+}
+
 @Directive({
   selector: '[color-coordinates], [colorCoordinates]',
+  host: {
+    '(pointerdown)': 'pointerDown($event)',
+    '(pointermove)': 'pointerMove($event)',
+    '(pointerup)': 'pointerUp($event)',
+  },
 })
 export class ColorCoordinates implements OnInit, OnDestroy {
-  private el = inject(ElementRef);
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  @Output()
-  coordinatesChange = new Subject<{
-    x: number;
-    y: number;
-    top: number;
-    left: number;
-    containerWidth: number;
-    containerHeight: number;
-    $event: Event;
-  }>();
-  private mousechange = new Subject<{
-    x: number;
-    y: number;
-    $event: Event;
-    isTouch: boolean;
-  }>();
+  @Output() coordinatesChange = new Subject<CoordinatesChangeEvent>();
 
-  private mouseListening = false;
+  private pointerChange = new Subject<{ x: number; y: number; $event: Event }>();
+  private isListening = false;
   private sub = Subscription.EMPTY;
 
-  @HostListener('window:mousemove', ['$event', '$event.pageX', '$event.pageY'])
-  @HostListener('window:touchmove', [
-    '$event',
-    '$event.touches[0].clientX',
-    '$event.touches[0].clientY',
-    'true',
-  ])
-  mousemove($event: Event, x: number, y: number, isTouch = false) {
-    if (this.mouseListening) {
-      $event.preventDefault();
-      this.mousechange.next({ $event, x, y, isTouch });
+  pointerDown(e: PointerEvent) {
+    const { x, y } = e;
+    e.preventDefault();
+
+    if (this.el.nativeElement.setPointerCapture) {
+      this.el.nativeElement.setPointerCapture(e.pointerId);
+    }
+
+    this.isListening = true;
+    this.pointerChange.next({ $event: e, x, y });
+  }
+
+  pointerMove(e: PointerEvent) {
+    const { x, y } = e;
+    if (this.isListening) {
+      e.preventDefault();
+      this.pointerChange.next({ $event: e, x, y });
     }
   }
-  @HostListener('window:mouseup')
-  @HostListener('window:touchend')
-  mouseup() {
-    this.mouseListening = false;
-  }
-  @HostListener('mousedown', ['$event', '$event.pageX', '$event.pageY'])
-  @HostListener('touchstart', [
-    '$event',
-    '$event.touches[0].clientX',
-    '$event.touches[0].clientY',
-    'true',
-  ])
-  mousedown($event: Event, x: number, y: number, isTouch = false) {
-    $event.preventDefault();
-    this.mouseListening = true;
-    this.mousechange.next({ $event, x, y, isTouch });
+
+  pointerUp($event: PointerEvent) {
+    if (this.isListening) {
+      this.isListening = false;
+
+      if (this.el.nativeElement.releasePointerCapture) {
+        this.el.nativeElement.releasePointerCapture($event.pointerId);
+      }
+    }
   }
 
   ngOnInit() {
-    this.sub = this.mousechange
+    this.sub = this.pointerChange
       .pipe(
         // limit times it is updated for the same area
         distinctUntilChanged((p, q) => p.x === q.x && p.y === q.y)
       )
-      .subscribe(n => this.handleChange(n.x, n.y, n.$event, n.isTouch));
+      .subscribe(n => this.handleChange(n.x, n.y, n.$event));
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 
-  handleChange(x: number, y: number, $event: Event, isTouch: boolean) {
-    const containerWidth = this.el.nativeElement.clientWidth;
-    const containerHeight = this.el.nativeElement.clientHeight;
-    const left = x - (this.el.nativeElement.getBoundingClientRect().left + window.pageXOffset);
-    let top = y - this.el.nativeElement.getBoundingClientRect().top;
-
-    if (!isTouch) {
-      top = top - window.pageYOffset;
-    }
+  handleChange(x: number, y: number, $event: Event) {
+    const containerRect = this.el.nativeElement.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    const containerHeight = containerRect.height;
+    const left = x - containerRect.left;
+    const top = y - containerRect.top;
 
     this.coordinatesChange.next({
       x,

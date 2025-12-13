@@ -22,6 +22,7 @@
 .color-saturation-area {
   position: absolute;
   inset: 0;
+  touch-action: none;
 }
 
 .color-saturation-area-pointer {
