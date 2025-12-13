@@ -321,13 +321,6 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/material@^19.2.19":
-  version "19.2.19"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-19.2.19.tgz#dd10669e260109c4f944303dcff3d92fed2e5566"
-  integrity sha512-auIE6JUzTIA3LyYklh9J/T7u64crmphxUBgAa0zcOMDog6SYfwbNe9YeLQqua5ek4OUAOdK/BHHfVl5W5iaUoQ==
-  dependencies:
-    tslib "^2.3.0"
-
 "@angular/platform-browser-dynamic@^19.2.17":
   version "19.2.17"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-19.2.17.tgz#ddc868412f9df4e19d90ae58c8e0da607e1860a9"
@@ -1576,7 +1569,7 @@
   resolved "https://registry.yarnpkg.com/@csstools/selector-specificity/-/selector-specificity-4.0.0.tgz#7dfccb9df5499e627e7bfdbb4021a06813a45dba"
   integrity sha512-189nelqtPd8++phaHNwYovKZI0FOzH1vQEE3QhHHkNIGrg5fSs9CbYP3RvfEH5geztnIA9Jwq91wyOIwAW5JIQ==
 
-"@ctrl/tinycolor@^4.1.0":
+"@ctrl/tinycolor@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-4.2.0.tgz#ba5d0b917303c0b3d3c14c4865cdc6ded25ac05f"
   integrity sha512-kzyuwOAQnXJNLS9PSyrk0CWk35nWJW/zl/6KvnTBMFK65gm7U1/Z5BqjxeapjZCIhQcM/DsrEmcbRwDyXyXK4A==
@@ -2407,23 +2400,6 @@
     "@napi-rs/nice-win32-arm64-msvc" "1.0.1"
     "@napi-rs/nice-win32-ia32-msvc" "1.0.1"
     "@napi-rs/nice-win32-x64-msvc" "1.0.1"
-
-"@ng-matero/extensions@^19.4.0":
-  version "19.4.1"
-  resolved "https://registry.yarnpkg.com/@ng-matero/extensions/-/extensions-19.4.1.tgz#15fb6e98a98055ff724763b04b999d9d7fb10632"
-  integrity sha512-vA39aB+FKl+Wv5MkllF3L2V11sIqU+MgmrSmhDXp4hp5N2LcyjgHp6xwQE8etOAbhJgDHE7tJrLNrZXco/vLwg==
-  dependencies:
-    "@ng-select/ng-select" "^14.2.0"
-    ngx-color "^10.0.0"
-    photoviewer "^3.10.0"
-    tslib "^2.4.0"
-
-"@ng-select/ng-select@^14.2.0":
-  version "14.9.0"
-  resolved "https://registry.yarnpkg.com/@ng-select/ng-select/-/ng-select-14.9.0.tgz#8f9f09d37bd856f17dd0af06f1c485108b180658"
-  integrity sha512-f/E3EaSVwdKmwvZL43nS961bGaXR90F0Gtb8vA+ub8Hfwqjr1NTI6X7+yu5iMkqfy5ZW5cJdoGvo+kv8zcAkjQ==
-  dependencies:
-    tslib "^2.3.1"
 
 "@ngtools/webpack@19.2.19":
   version "19.2.19"
@@ -4563,11 +4539,6 @@ domhandler@^5.0.2, domhandler@^5.0.3:
   dependencies:
     domelementtype "^2.3.0"
 
-domq.js@^0.7.0:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/domq.js/-/domq.js-0.7.1.tgz#4b3c9306a26d4d1a64681a452b15eca0ce00fbc9"
-  integrity sha512-SQjubdV+FsTa8pRPrhygohvraS6NS5XdH2wK0V8nzg3vQW5+h3+LDn5XCE5RYejbtZE4aAUz2UTxE1B9oSl55w==
-
 domutils@^3.0.1:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/domutils/-/domutils-3.1.0.tgz#c47f551278d3dc4b0b1ab8cbb42d751a6f0d824e"
@@ -6624,11 +6595,6 @@ make-fetch-happen@^14.0.0, make-fetch-happen@^14.0.2, make-fetch-happen@^14.0.3:
     promise-retry "^2.0.1"
     ssri "^12.0.0"
 
-material-colors@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/material-colors/-/material-colors-1.2.6.tgz#6d1958871126992ceecc72f4bcc4d8f010865f46"
-  integrity sha512-6qE4B9deFBIa9YSpOc9O0Sgc43zTeVYbgDT5veRKSlB2+ZuHNoVVxA1L/ckMUayV9Ay9y7Z/SZCLcGteW9i7bg==
-
 math-intrinsics@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/math-intrinsics/-/math-intrinsics-1.1.0.tgz#a0dd74be81e2aa5c2f27e65ce283605ee4e2b7f9"
@@ -7002,15 +6968,6 @@ ng-packagr@^19.2.2:
     sass "^1.81.0"
   optionalDependencies:
     rollup "^4.24.0"
-
-ngx-color@^10.0.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/ngx-color/-/ngx-color-10.1.0.tgz#a3083548fba9fd9e02c2e7e0a954eb6cf17e010f"
-  integrity sha512-yuxlE1LfN+PABIO4hv0Gw5ksq8g9XkMJKrGPn2SWbrre/gsH+kkyyn3rwSCurinnLCnw7czqenwQUtnBJm8yww==
-  dependencies:
-    "@ctrl/tinycolor" "^4.1.0"
-    material-colors "^1.2.6"
-    tslib "^2.3.0"
 
 node-addon-api@^6.1.0:
   version "6.1.0"
@@ -7458,13 +7415,6 @@ path-type@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-5.0.0.tgz#14b01ed7aea7ddf9c7c3f46181d4d04f9c785bb8"
   integrity sha512-5HviZNaZcfqP95rwpv+1HDgUamezbqdSYTyzjTvwtJSnIH+3vnbmWsItli8OFEndS984VT55M3jduxZbX351gg==
-
-photoviewer@^3.10.0:
-  version "3.10.3"
-  resolved "https://registry.yarnpkg.com/photoviewer/-/photoviewer-3.10.3.tgz#7f38feda302c29466d315dabf07ed52bb13d277b"
-  integrity sha512-6RqhMOiPVMsgfMTP/j/lQLGGj2glzBWIDnrTpx2rcACOcO8ig+bnBAfofEPXBmLOgKxsu+HIiLQudVtloS9GEA==
-  dependencies:
-    domq.js "^0.7.0"
 
 picocolors@^1.0.0, picocolors@^1.0.1, picocolors@^1.1.0:
   version "1.1.0"
@@ -8941,7 +8891,7 @@ tslib@2.8.1:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
-tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0, tslib@^2.3.1, tslib@^2.4.0:
+tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.7.0.tgz#d9b40c5c40ab59e8738f297df3087bf1a2690c01"
   integrity sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==

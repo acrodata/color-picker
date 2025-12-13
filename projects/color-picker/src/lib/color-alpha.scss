@@ -1,0 +1,30 @@
+.color-alpha {
+  position: relative;
+  display: block;
+  height: 10px;
+}
+
+.color-alpha-gradient {
+  position: absolute;
+  inset: 0;
+}
+
+.color-alpha-slider-track {
+  position: relative;
+  height: 100%;
+  background-image: conic-gradient(transparent 25%, #ccc 25% 50%, transparent 50% 75%, #ccc 75%);
+  background-size: 10px 10px;
+}
+
+.color-alpha-slider-pointer {
+  position: absolute;
+}
+
+.color-alpha-slider-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  transform: translate(-6px, -1px);
+  background-color: rgb(248, 248, 248);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}

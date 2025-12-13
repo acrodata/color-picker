@@ -1,0 +1,38 @@
+.color-saturation {
+  display: block;
+  width: 100%;
+  padding-bottom: 55%;
+  position: relative;
+  border-radius: 2px 2px 0 0;
+  overflow: hidden;
+}
+
+.color-saturation-white {
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+  position: absolute;
+  inset: 0;
+}
+
+.color-saturation-black {
+  background: linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+  position: absolute;
+  inset: 0;
+}
+
+.color-saturation-area {
+  position: absolute;
+  inset: 0;
+}
+
+.color-saturation-area-pointer {
+  position: absolute;
+}
+
+.color-saturation-area-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgb(255, 255, 255);
+  transform: translate(-6px, -6px);
+  cursor: move;
+}
