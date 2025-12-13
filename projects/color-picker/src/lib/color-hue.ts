@@ -7,7 +7,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { ColorCoordinates } from './color-coordinates';
+import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
 import { HSLA, HSLAsource } from './interfaces';
 
 @Component({
@@ -37,7 +37,7 @@ export class ColorHue implements OnChanges {
   @Input() hsl!: HSLA;
   @Input() hidePointer = false;
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
-  @Output() change = new EventEmitter<{ data: HSLAsource; $event: Event }>();
+  @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
 
   left = '0px';
   top = '';
@@ -50,7 +50,7 @@ export class ColorHue implements OnChanges {
     }
   }
 
-  handleChange(e: any): void {
+  handleChange(e: CoordinatesChangeEvent): void {
     const { top, left, containerHeight, containerWidth, $event } = e;
     let data: HSLAsource | undefined;
     if (this.direction === 'vertical') {

@@ -7,8 +7,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { ColorCoordinates } from './color-coordinates';
-import { HSLA, RGBA } from './interfaces';
+import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
+import { HSLA, HSLAsource, RGBA } from './interfaces';
 
 @Component({
   selector: 'color-alpha',
@@ -41,7 +41,7 @@ export class ColorAlpha implements OnChanges {
   @Input() hsl!: HSLA;
   @Input() rgb!: RGBA;
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
-  @Output() change = new EventEmitter<any>();
+  @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
 
   gradient = '';
   pointerLeft!: number;
@@ -60,9 +60,9 @@ export class ColorAlpha implements OnChanges {
     }
   }
 
-  handleChange(e: any): void {
+  handleChange(e: CoordinatesChangeEvent): void {
     const { top, left, containerHeight, containerWidth, $event } = e;
-    let data: any;
+    let data: HSLAsource | undefined;
     if (this.direction === 'vertical') {
       let a: number;
       if (top < 0) {

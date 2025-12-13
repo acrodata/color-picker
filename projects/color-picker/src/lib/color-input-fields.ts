@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { TinyColor } from '@ctrl/tinycolor';
 import { ColorInputField } from './color-input-field';
+import { HEXsource, HSLA, HSLAsource, HSLsource, RGBA, RGBsource } from './interfaces';
 import { isValidHex } from './utils';
-import { HSLA, RGBA } from './interfaces';
 
 @Component({
   selector: 'color-input-fields',
@@ -79,7 +79,10 @@ export class ColorInputFields implements OnInit {
   @Input() hsl!: HSLA;
   @Input() rgb!: RGBA;
   @Input() hex = '';
-  @Output() change = new EventEmitter<any>();
+  @Output() change = new EventEmitter<{
+    data: HEXsource | RGBsource | HSLAsource | HSLsource;
+    $event: KeyboardEvent | PointerEvent;
+  }>();
 
   format = '';
 
@@ -109,7 +112,7 @@ export class ColorInputFields implements OnInit {
     return Math.round(value);
   }
 
-  handleChange(e: any) {
+  handleChange(e: { data: any; $event: KeyboardEvent | PointerEvent }) {
     const { data, $event } = e;
     if (data.hex) {
       if (isValidHex(data.hex)) {

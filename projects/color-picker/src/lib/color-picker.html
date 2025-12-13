@@ -1,16 +1,16 @@
-<color-saturation [hsl]="hsl" [hsv]="hsv" (change)="handleValueChange($event)" />
+<color-saturation [hsl]="hsl" [hsv]="hsv" (change)="handleChange($event)" />
 
 <div class="color-picker-controls">
   <div class="color-swatch">
     <div class="color-swatch-bg" [style.background]="activeBackground"></div>
   </div>
   <div class="color-hue-alpha">
-    <color-hue [hsl]="hsl" (change)="handleValueChange($event)" />
+    <color-hue [hsl]="hsl" (change)="handleChange($event)" />
 
     @if (!disableAlpha) {
-      <color-alpha [rgb]="rgb" [hsl]="hsl" (change)="handleValueChange($event)" />
+      <color-alpha [rgb]="rgb" [hsl]="hsl" (change)="handleChange($event)" />
     }
   </div>
 </div>
 
-<color-input-fields [rgb]="rgb" [hsl]="hsl" [hex]="hex" (change)="handleValueChange($event)" />
+<color-input-fields [rgb]="rgb" [hsl]="hsl" [hex]="hex" (change)="handleChange($event)" />

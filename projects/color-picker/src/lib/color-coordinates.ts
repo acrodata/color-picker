@@ -9,7 +9,7 @@ export interface CoordinatesChangeEvent {
   left: number;
   containerWidth: number;
   containerHeight: number;
-  $event: Event;
+  $event: PointerEvent;
 }
 
 @Directive({
@@ -25,9 +25,9 @@ export class ColorCoordinates implements OnInit, OnDestroy {
 
   @Output() coordinatesChange = new Subject<CoordinatesChangeEvent>();
 
-  private pointerChange = new Subject<{ x: number; y: number; $event: Event }>();
+  private pointerChange = new Subject<PointerEvent>();
+  private pointerSub = Subscription.EMPTY;
   private isListening = false;
-  private sub = Subscription.EMPTY;
 
   pointerDown(e: PointerEvent) {
     const { x, y } = e;
@@ -38,44 +38,45 @@ export class ColorCoordinates implements OnInit, OnDestroy {
     }
 
     this.isListening = true;
-    this.pointerChange.next({ $event: e, x, y });
+    this.pointerChange.next(e);
   }
 
   pointerMove(e: PointerEvent) {
     const { x, y } = e;
     if (this.isListening) {
       e.preventDefault();
-      this.pointerChange.next({ $event: e, x, y });
+      this.pointerChange.next(e);
     }
   }
 
-  pointerUp($event: PointerEvent) {
+  pointerUp(e: PointerEvent) {
     if (this.isListening) {
       this.isListening = false;
 
       if (this.el.nativeElement.releasePointerCapture) {
-        this.el.nativeElement.releasePointerCapture($event.pointerId);
+        this.el.nativeElement.releasePointerCapture(e.pointerId);
       }
     }
   }
 
   ngOnInit() {
-    this.sub = this.pointerChange
+    this.pointerSub = this.pointerChange
       .pipe(
         // limit times it is updated for the same area
         distinctUntilChanged((p, q) => p.x === q.x && p.y === q.y)
       )
-      .subscribe(n => this.handleChange(n.x, n.y, n.$event));
+      .subscribe(n => this.handleChange(n));
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.pointerSub.unsubscribe();
   }
 
-  handleChange(x: number, y: number, $event: Event) {
+  handleChange(e: PointerEvent) {
     const containerRect = this.el.nativeElement.getBoundingClientRect();
     const containerWidth = containerRect.width;
     const containerHeight = containerRect.height;
+    const { x, y } = e;
     const left = x - containerRect.left;
     const top = y - containerRect.top;
 
@@ -86,7 +87,7 @@ export class ColorCoordinates implements OnInit, OnDestroy {
       left,
       containerWidth,
       containerHeight,
-      $event,
+      $event: e,
     });
   }
 }

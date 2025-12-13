@@ -43,7 +43,10 @@ export class ColorInputField implements OnChanges, OnDestroy {
   @Input() dragLabel = false;
   @Input() dragMax!: number;
   @Input() placeholder = '';
-  @Output() change = new EventEmitter();
+  @Output() change = new EventEmitter<{
+    data: Record<string, number | string> | number | string;
+    $event: KeyboardEvent | PointerEvent;
+  }>();
 
   currentValue!: string | number;
   blurValue = '';
@@ -66,20 +69,20 @@ export class ColorInputField implements OnChanges, OnDestroy {
     this.unsubscribe();
   }
 
-  handleFocus($event: FocusEvent) {
+  handleFocus(e: FocusEvent) {
     this.focus = true;
   }
 
-  handleFocusOut($event: FocusEvent) {
+  handleFocusOut(e: FocusEvent) {
     this.focus = false;
     this.currentValue = this.blurValue;
   }
 
-  handleKeydown($event: KeyboardEvent) {
+  handleKeydown(e: KeyboardEvent) {
     // In case `e.target.value` is a percentage remove the `%` character
     // and update accordingly with a percentage
     // https://github.com/casesandberg/react-color/issues/383
-    const target = $event.target as HTMLInputElement;
+    const target = e.target as HTMLInputElement;
     const stringValue = String(target.value);
     const isPercentage = stringValue.indexOf('%') > -1;
     const num = Number(stringValue.replace(/%/g, ''));
@@ -89,14 +92,14 @@ export class ColorInputField implements OnChanges, OnDestroy {
     const amount = this.arrowOffset || 1;
 
     // Up
-    if ($event.keyCode === 38) {
+    if (e.keyCode === 38) {
       if (this.label) {
         this.change.emit({
           data: { [this.label]: num + amount },
-          $event,
+          $event: e,
         });
       } else {
-        this.change.emit({ data: num + amount, $event });
+        this.change.emit({ data: num + amount, $event: e });
       }
 
       if (isPercentage) {
@@ -107,14 +110,14 @@ export class ColorInputField implements OnChanges, OnDestroy {
     }
 
     // Down
-    if ($event.keyCode === 40) {
+    if (e.keyCode === 40) {
       if (this.label) {
         this.change.emit({
           data: { [this.label]: num - amount },
-          $event,
+          $event: e,
         });
       } else {
-        this.change.emit({ data: num - amount, $event });
+        this.change.emit({ data: num - amount, $event: e });
       }
 
       if (isPercentage) {
@@ -125,9 +128,9 @@ export class ColorInputField implements OnChanges, OnDestroy {
     }
   }
 
-  handleKeyup($event: KeyboardEvent) {
-    const target = $event.target as HTMLInputElement;
-    if ($event.keyCode === 40 || $event.keyCode === 38) {
+  handleKeyup(e: KeyboardEvent) {
+    const target = e.target as HTMLInputElement;
+    if (e.keyCode === 40 || e.keyCode === 38) {
       return;
     }
     if (`${this.currentValue}` === target.value) {
@@ -137,10 +140,10 @@ export class ColorInputField implements OnChanges, OnDestroy {
     if (this.label) {
       this.change.emit({
         data: { [this.label]: target.value },
-        $event,
+        $event: e,
       });
     } else {
-      this.change.emit({ data: target.value, $event });
+      this.change.emit({ data: target.value, $event: e });
     }
   }
 
@@ -156,19 +159,22 @@ export class ColorInputField implements OnChanges, OnDestroy {
     this.pointerUpSub.unsubscribe();
   }
 
-  handlePointerdown($event: PointerEvent) {
+  handlePointerdown(e: PointerEvent) {
     if (this.dragLabel) {
-      $event.preventDefault();
-      this.handleDrag($event);
+      e.preventDefault();
+      this.handleDrag(e);
       this.subscribe();
     }
   }
 
-  handleDrag($event: PointerEvent) {
+  handleDrag(e: PointerEvent) {
     if (this.dragLabel) {
-      const newValue = Math.round(+this.value + $event.movementX);
+      const newValue = Math.round(+this.value + e.movementX);
       if (newValue >= 0 && newValue <= this.dragMax) {
-        this.change.emit({ data: { [this.label]: newValue }, $event });
+        this.change.emit({
+          data: { [this.label]: newValue },
+          $event: e,
+        });
       }
     }
   }

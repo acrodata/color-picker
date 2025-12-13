@@ -133,7 +133,26 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     this.swatchHoverSubscription.unsubscribe();
   }
 
-  setState(data: any) {
+  writeValue(value: any): void {
+    if (value) {
+      this.color = value;
+      this.setState(toState(this.color, this.oldHue));
+    }
+  }
+
+  registerOnChange(fn: (hex: string) => void): void {
+    this.afterChangedSubscription.add(
+      this.afterChanged.pipe(tap(event => fn(event.color.hex))).subscribe()
+    );
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.swatchHoverSubscription.add(this.swatchHover.pipe(tap(() => fn())).subscribe());
+  }
+
+  setDisabledState(isDisabled: boolean): void {}
+
+  setState(data: Color) {
     this.oldHue = data.oldHue;
     this.hsl = data.hsl;
     this.hsv = data.hsv;
@@ -143,7 +162,8 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     this.afterValidChange();
   }
 
-  handleChange(data: any, $event: Event) {
+  handleChange(e: { data: any; $event: Event }) {
+    const { data, $event } = e;
     const isValidColor = simpleCheckForValidColor(data);
     if (isValidColor) {
       const color = toState(data, data.h || this.oldHue, this.disableAlpha);
@@ -165,29 +185,5 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       this.setState(color);
       this.swatchHover.emit({ color, $event });
     }
-  }
-
-  registerOnChange(fn: (hex: string) => void): void {
-    this.afterChangedSubscription.add(
-      this.afterChanged.pipe(tap(event => fn(event.color.hex))).subscribe()
-    );
-  }
-
-  registerOnTouched(fn: () => void): void {
-    this.swatchHoverSubscription.add(this.swatchHover.pipe(tap(() => fn())).subscribe());
-  }
-
-  setDisabledState(isDisabled: boolean): void {}
-
-  writeValue(hex: any): void {
-    if (hex) {
-      this.color = hex;
-      this.setState(toState(this.color, this.oldHue));
-    }
-  }
-
-  handleValueChange(e: any) {
-    const { data, $event } = e;
-    this.handleChange(data, $event);
   }
 }

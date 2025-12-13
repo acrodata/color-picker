@@ -7,7 +7,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { ColorCoordinates } from './color-coordinates';
+import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
 import { HSLA, HSVA, HSVAsource } from './interfaces';
 
 @Component({
@@ -43,7 +43,7 @@ export class ColorSaturation implements OnChanges {
   @Input() hsl!: HSLA;
   @Input() hsv!: HSVA;
   @Input() radius!: number;
-  @Output() change = new EventEmitter<{ data: HSVAsource; $event: Event }>();
+  @Output() change = new EventEmitter<{ data: HSVAsource; $event: PointerEvent }>();
 
   background!: string;
   pointerTop!: string;
@@ -55,9 +55,9 @@ export class ColorSaturation implements OnChanges {
     this.pointerLeft = this.hsv.s * 100 + '%';
   }
 
-  handleChange(e: any) {
-    // eslint-disable-next-line prefer-const
-    let { top, left, containerHeight, containerWidth, $event } = e;
+  handleChange(e: CoordinatesChangeEvent) {
+    const { containerHeight, containerWidth, $event } = e;
+    let { top, left } = e;
     if (left < 0) {
       left = 0;
     } else if (left > containerWidth) {
