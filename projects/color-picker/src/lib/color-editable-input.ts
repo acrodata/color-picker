@@ -5,7 +5,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
@@ -17,8 +16,6 @@ let nextUniqueId = 0;
   selector: 'color-editable-input',
   template: `
     <input
-      [id]="uniqueId"
-      [style]="inputStyle"
       spellCheck="false"
       [value]="currentValue"
       [placeholder]="placeholder"
@@ -29,41 +26,44 @@ let nextUniqueId = 0;
       [attr.aria-labelledby]="uniqueId"
     />
     @if (label) {
-      <label
-        [for]="uniqueId"
-        [id]="uniqueId"
-        [style]="labelStyle"
-        (pointerdown)="handleMousedown($event)"
-      >
-        {{ label }}
-      </label>
+      <span [id]="uniqueId" (pointerdown)="handlePointerdown($event)">{{ label }}</span>
     }
   `,
+  host: {
+    class: 'color-editable-input',
+  },
+  styleUrl: './color-editable-input.scss',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorEditableInput implements OnInit, OnChanges, OnDestroy {
-  @Input() label!: string;
+export class ColorEditableInput implements OnChanges, OnDestroy {
+  @Input() label = '';
   @Input() value!: string | number;
   @Input() arrowOffset!: number;
-  @Input() dragLabel!: boolean;
+  @Input() dragLabel = false;
   @Input() dragMax!: number;
   @Input() placeholder = '';
   @Output() change = new EventEmitter();
 
   currentValue!: string | number;
-  blurValue!: string;
-  inputStyle!: Record<string, string>;
-  labelStyle!: Record<string, string>;
+  blurValue = '';
   focus = false;
-  pointermove!: Subscription;
-  pointerup!: Subscription;
-  uniqueId: string = `editableInput-${++nextUniqueId}`;
+  uniqueId: string = `color-editable-input-${++nextUniqueId}`;
 
-  ngOnInit() {
-    if (this.dragLabel) {
-      this.labelStyle['cursor'] = 'ew-resize';
+  pointerMoveSub = Subscription.EMPTY;
+  pointerUpSub = Subscription.EMPTY;
+
+  ngOnChanges() {
+    if (!this.focus) {
+      this.currentValue = String(this.value).toUpperCase();
+      this.blurValue = String(this.value).toUpperCase();
+    } else {
+      this.blurValue = String(this.value).toUpperCase();
     }
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe();
   }
 
   handleFocus($event: FocusEvent) {
@@ -144,32 +144,19 @@ export class ColorEditableInput implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  ngOnChanges() {
-    if (!this.focus) {
-      this.currentValue = String(this.value).toUpperCase();
-      this.blurValue = String(this.value).toUpperCase();
-    } else {
-      this.blurValue = String(this.value).toUpperCase();
-    }
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe();
-  }
-
   subscribe() {
-    this.pointermove = fromEvent<PointerEvent>(document, 'pointermove').subscribe(ev =>
-      this.handleDrag(ev)
+    this.pointerMoveSub = fromEvent<PointerEvent>(document, 'pointermove').subscribe(e =>
+      this.handleDrag(e)
     );
-    this.pointerup = fromEvent(document, 'pointerup').subscribe(() => this.unsubscribe());
+    this.pointerUpSub = fromEvent(document, 'pointerup').subscribe(() => this.unsubscribe());
   }
 
   unsubscribe() {
-    this.pointermove?.unsubscribe();
-    this.pointerup?.unsubscribe();
+    this.pointerMoveSub.unsubscribe();
+    this.pointerUpSub.unsubscribe();
   }
 
-  handleMousedown($event: PointerEvent) {
+  handlePointerdown($event: PointerEvent) {
     if (this.dragLabel) {
       $event.preventDefault();
       this.handleDrag($event);

@@ -1,0 +1,30 @@
+.color-editable-input {
+  font-size: 11px;
+  text-align: center;
+
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 24px;
+    border: none;
+    border-radius: var(--cp-input-shape, 4px);
+    outline: 1px solid var(--cp-input-outline-color, #e6e6e6);
+    font-size: inherit;
+    text-align: inherit;
+
+    &:hover {
+      outline-color: var(--cp-input-hover-outline-color, #d6d6d6);
+    }
+
+    &:focus-within {
+      outline-color: var(--cp-input-focus-outline-color, #0d99ff);
+    }
+  }
+
+  span {
+    display: block;
+    margin-top: 8px;
+    color: #969696;
+    text-transform: uppercase;
+  }
+}
