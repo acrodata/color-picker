@@ -13,7 +13,7 @@ import { fromEvent, Subscription } from 'rxjs';
 let nextUniqueId = 0;
 
 @Component({
-  selector: 'color-editable-input',
+  selector: 'color-input-field',
   template: `
     <input
       spellCheck="false"
@@ -30,13 +30,13 @@ let nextUniqueId = 0;
     }
   `,
   host: {
-    class: 'color-editable-input',
+    class: 'color-input-field',
   },
-  styleUrl: './color-editable-input.scss',
+  styleUrl: './color-input-field.scss',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorEditableInput implements OnChanges, OnDestroy {
+export class ColorInputField implements OnChanges, OnDestroy {
   @Input() label = '';
   @Input() value!: string | number;
   @Input() arrowOffset!: number;

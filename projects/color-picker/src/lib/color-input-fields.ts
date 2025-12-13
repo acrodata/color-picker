@@ -8,25 +8,25 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { TinyColor } from '@ctrl/tinycolor';
-import { ColorEditableInput } from './color-editable-input';
+import { ColorInputField } from './color-input-field';
 import { isValidHex } from './utils';
 import { HSLA, RGBA } from './interfaces';
 
 @Component({
   selector: 'color-input-fields',
-  imports: [ColorEditableInput],
+  imports: [ColorInputField],
   template: `
-    <div class="color-input-wrapper">
+    <div class="color-input-field-wrapper">
       @if (format === 'hex') {
-        <color-editable-input label="hex" [value]="hex" (change)="handleChange($event)" />
+        <color-input-field label="hex" [value]="hex" (change)="handleChange($event)" />
       }
       @if (format === 'rgb') {
-        <color-editable-input label="r" [value]="rgb.r" (change)="handleChange($event)" />
-        <color-editable-input label="g" [value]="rgb.g" (change)="handleChange($event)" />
-        <color-editable-input label="b" [value]="rgb.b" (change)="handleChange($event)" />
+        <color-input-field label="r" [value]="rgb.r" (change)="handleChange($event)" />
+        <color-input-field label="g" [value]="rgb.g" (change)="handleChange($event)" />
+        <color-input-field label="b" [value]="rgb.b" (change)="handleChange($event)" />
 
         @if (!disableAlpha) {
-          <color-editable-input
+          <color-input-field
             label="a"
             [value]="rgb.a"
             [arrowOffset]="0.01"
@@ -35,20 +35,20 @@ import { HSLA, RGBA } from './interfaces';
         }
       }
       @if (format === 'hsl') {
-        <color-editable-input label="h" [value]="round(hsl.h)" (change)="handleChange($event)" />
-        <color-editable-input
+        <color-input-field label="h" [value]="round(hsl.h)" (change)="handleChange($event)" />
+        <color-input-field
           label="s"
           [value]="round(hsl.s * 100) + '%'"
           (change)="handleChange($event)"
         />
-        <color-editable-input
+        <color-input-field
           label="l"
           [value]="round(hsl.l * 100) + '%'"
           (change)="handleChange($event)"
         />
 
         @if (!disableAlpha) {
-          <color-editable-input
+          <color-input-field
             label="a"
             [value]="hsl.a"
             [arrowOffset]="0.01"
@@ -105,7 +105,7 @@ export class ColorInputFields implements OnInit {
     }
   }
 
-  round(value: any) {
+  round(value: number) {
     return Math.round(value);
   }
 
