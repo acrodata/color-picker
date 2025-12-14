@@ -1,4 +1,22 @@
+<label>
+  <input type="radio" name="format" value="hex" [(ngModel)]="format" />
+  <span>hex</span>
+</label>
+<label>
+  <input type="radio" name="format" value="rgb" [(ngModel)]="format" />
+  <span>rgb</span>
+</label>
+<label>
+  <input type="radio" name="format" value="hsl" [(ngModel)]="format" />
+  <span>hsl</span>
+</label>
+<label>
+  <input type="radio" name="format" value="hsv" [(ngModel)]="format" />
+  <span>hsv</span>
+</label>
+
 <color-picker
+  [(format)]="format"
   [(ngModel)]="color"
   (ngModelChange)="log('ngModelChange', $event)"
   (colorChange)="log('colorChange', $event)"
@@ -8,7 +26,7 @@
 {{ color }}
 
 <color-picker [(ngModel)]="color2" />
-{{color2}}
+{{ color2 }}
 
-<color-picker [(ngModel)]="color3" />
-{{color3}}
+<color-picker [(color)]="color3" />
+{{ color3 }}

@@ -3,13 +3,13 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
+  OnChanges,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
 import { TinyColor } from '@ctrl/tinycolor';
 import { ColorInputField } from './color-input-field';
-import { HEXsource, HSLA, HSLAsource, HSLsource, RGBA, RGBsource } from './interfaces';
+import { ColorFormat, HEXsource, HSLA, HSLAsource, HSLsource, RGBA, RGBsource } from './interfaces';
 import { isValidHex } from './utils';
 
 @Component({
@@ -58,7 +58,7 @@ import { isValidHex } from './utils';
       }
     </div>
 
-    <button class="color-format-toggle" (click)="toggleColorFormat()">
+    <button class="color-format-toggle" (click)="toggleColorFormat($event)">
       <svg viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -74,41 +74,49 @@ import { isValidHex } from './utils';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorInputFields implements OnInit {
+export class ColorInputFields implements OnChanges {
+  @Input() format?: ColorFormat = 'hex';
+
+  @Output() formatChange = new EventEmitter<ColorFormat>();
+
   @Input() disableAlpha = false;
+
   @Input() hsl!: HSLA;
+
   @Input() rgb!: RGBA;
+
   @Input() hex = '';
+
   @Output() valueChange = new EventEmitter<{
     data: HEXsource | RGBsource | HSLAsource | HSLsource;
-    $event: KeyboardEvent | PointerEvent;
+    $event: KeyboardEvent | PointerEvent | MouseEvent;
   }>();
 
-  format = '';
-
-  ngOnInit() {
-    if (this.hsl.a === 1 && this.format !== 'hex') {
-      this.format = 'hex';
-    } else if (this.format !== 'rgb' && this.format !== 'hsl') {
-      this.format = 'rgb';
+  ngOnChanges(): void {
+    if (this.format === 'hsv') {
+      this.format = 'hsl';
     }
   }
 
-  toggleColorFormat() {
+  toggleColorFormat(e: MouseEvent) {
     if (this.format === 'hex') {
       this.format = 'rgb';
+      this.handleChange({ data: { ...this.rgb, source: 'rgb' }, $event: e });
     } else if (this.format === 'rgb') {
       this.format = 'hsl';
+      this.handleChange({ data: { ...this.hsl, source: 'hsl' }, $event: e });
     } else if (this.format === 'hsl') {
       this.format = 'hex';
+      this.handleChange({ data: { hex: this.hex, source: 'hex' }, $event: e });
     }
+    this.formatChange.emit(this.format);
   }
 
   round(value: number) {
     return Math.round(value);
   }
 
-  handleChange(e: { data: any; $event: KeyboardEvent | PointerEvent }) {
+  handleChange(e: { data: any; $event: KeyboardEvent | PointerEvent | MouseEvent }) {
     const { data, $event } = e;
     if (data.hex) {
       if (isValidHex(data.hex)) {
@@ -127,7 +135,21 @@ export class ColorInputFields implements OnInit {
           r: data.r || this.rgb.r,
           g: data.g || this.rgb.g,
           b: data.b || this.rgb.b,
+          a: Math.round((data.a || this.rgb.a) * 100) / 100,
           source: 'rgb',
+        },
+        $event,
+      });
+    } else if (data.h || data.s || data.l) {
+      const s = typeof data.s === 'string' ? data.s.replace('%', '') : data.s;
+      const l = typeof data.l === 'string' ? data.l.replace('%', '') : data.l;
+      this.valueChange.emit({
+        data: {
+          h: data.h || this.hsl.h,
+          s: Number(s || this.hsl.s),
+          l: Number(l || this.hsl.l),
+          a: Math.round((data.a || this.hsl.a) * 100) / 100,
+          source: 'hsl',
         },
         $event,
       });
@@ -149,18 +171,6 @@ export class ColorInputFields implements OnInit {
           l: this.hsl.l,
           a: Math.round(data.a * 100) / 100,
           source: 'rgb',
-        },
-        $event,
-      });
-    } else if (data.h || data.s || data.l) {
-      const s = typeof data.s === 'string' ? data.s.replace('%', '') : data.s;
-      const l = typeof data.l === 'string' ? data.l.replace('%', '') : data.l;
-      this.valueChange.emit({
-        data: {
-          h: data.h || this.hsl.h,
-          s: Number(s || this.hsl.s),
-          l: Number(l || this.hsl.l),
-          source: 'hsl',
         },
         $event,
       });

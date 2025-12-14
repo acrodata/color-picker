@@ -15,8 +15,10 @@
 
 <color-input-fields
   class="color-picker-controls"
+  [(format)]="format"
   [rgb]="rgb"
   [hsl]="hsl"
   [hex]="hex"
   (valueChange)="handleChange($event)"
+  (formatChange)="handleFormatChange()"
 />

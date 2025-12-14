@@ -14,25 +14,14 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TinyColor } from '@ctrl/tinycolor';
 import { debounceTime, Subscription, tap } from 'rxjs';
 import { ColorAlphaSlider } from './color-alpha-slider';
 import { ColorHueSlider } from './color-hue-slider';
 import { ColorInputFields } from './color-input-fields';
 import { ColorSaturationPicker } from './color-saturation-picker';
-import { Color, HSLA, HSVA, RGBA } from './interfaces';
+import { Color, ColorEvent, ColorFormat, HSLA, HSVA, RGBA } from './interfaces';
 import { simpleCheckForValidColor, toState } from './utils';
-
-export interface ColorEvent {
-  $event: Event;
-  color: Color;
-}
-
-export enum ColorMode {
-  HEX = 'hex',
-  RGB = 'rgb',
-  HSL = 'hsl',
-  HSV = 'hsv',
-}
 
 @Component({
   selector: 'color-picker',
@@ -55,11 +44,13 @@ export enum ColorMode {
 export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
   private cdr = inject(ChangeDetectorRef);
 
-  @Input() mode = ColorMode.HEX;
+  @Input() format?: ColorFormat;
 
-  @Input() color: HSLA | HSVA | RGBA | string = { h: 250, s: 0.5, l: 0.2, a: 1 };
+  @Output() formatChange = new EventEmitter<ColorFormat>();
 
-  @Output() colorChange = new EventEmitter<HSLA | HSVA | RGBA | string>();
+  @Input() color: HSLA | HSVA | RGBA | string = '#000';
+
+  @Output() colorChange = new EventEmitter<string>();
 
   @Output() valueChange = new EventEmitter<ColorEvent>();
 
@@ -71,7 +62,6 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   rgb!: RGBA;
   hex = '';
   source = '';
-  currentColor = '';
   disableAlpha = false;
 
   activeBgColor = '';
@@ -85,37 +75,16 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
         debounceTime(100),
         tap(e => {
           this.valueChanged.emit(e);
-          switch (this.mode) {
-            case ColorMode.HEX:
-              this.colorChange.emit(e.color.hex);
-              break;
-            case ColorMode.HSL:
-              this.colorChange.emit(e.color.hsl);
-              break;
-            case ColorMode.HSV:
-              this.colorChange.emit(e.color.hsv);
-              break;
-            case ColorMode.RGB:
-              this.colorChange.emit(e.color.rgb);
-              break;
-            default: {
-              const msg = `The mode '${this.mode}' is not supported`;
-              if (isDevMode()) {
-                throw new Error(msg);
-              } else {
-                console.warn(msg);
-              }
-              break;
-            }
-          }
+          this.colorChange.emit(this.getColorString(e.color));
         })
       )
       .subscribe();
+    this.format = this.getColorFormat();
     this.setState(toState(this.color, 0));
-    this.currentColor = this.hex;
   }
 
   ngOnChanges() {
+    this.format = this.getColorFormat();
     this.setState(toState(this.color, this.oldHue));
   }
 
@@ -127,12 +96,15 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   writeValue(value: any): void {
     if (value) {
       this.color = value;
+      this.format = this.getColorFormat();
       this.setState(toState(this.color, this.oldHue));
     }
   }
 
-  registerOnChange(fn: (hex: string) => void): void {
-    this.valueChangedSub.add(this.valueChanged.pipe(tap(e => fn(e.color.hex))).subscribe());
+  registerOnChange(fn: (color: string) => void): void {
+    this.valueChangedSub.add(
+      this.valueChanged.pipe(tap(e => fn(this.getColorString(e.color)))).subscribe()
+    );
   }
 
   registerOnTouched(fn: () => void): void {}
@@ -163,5 +135,48 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   afterValidChange() {
     const alpha = this.disableAlpha ? 1 : this.rgb.a;
     this.activeBgColor = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${alpha})`;
+  }
+
+  getColorFormat() {
+    if (this.format != null) {
+      return this.format;
+    }
+    const color = new TinyColor(this.color);
+    if (color.format === 'rgb' || color.format === 'hsl' || color.format === 'hsv') {
+      return color.format;
+    }
+    return 'hex';
+  }
+
+  getColorString(color: Color) {
+    let colorStr = '';
+    switch (this.format) {
+      case 'hex':
+        colorStr = color.hex;
+        break;
+      case 'rgb':
+        colorStr = new TinyColor(color.rgb).toRgbString();
+        break;
+      case 'hsl':
+        colorStr = new TinyColor(color.hsl).toHslString();
+        break;
+      case 'hsv':
+        colorStr = new TinyColor(color.hsv).toHsvString();
+        break;
+      default: {
+        const msg = `The format '${this.format}' is not supported`;
+        if (isDevMode()) {
+          throw new Error(msg);
+        } else {
+          console.warn(msg);
+        }
+        break;
+      }
+    }
+    return colorStr;
+  }
+
+  handleFormatChange() {
+    this.formatChange.emit(this.format);
   }
 }

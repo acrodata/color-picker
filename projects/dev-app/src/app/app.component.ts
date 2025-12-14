@@ -1,4 +1,4 @@
-import { ColorPicker } from '@acrodata/color-picker';
+import { ColorFormat, ColorPicker } from '@acrodata/color-picker';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -12,6 +12,8 @@ export class AppComponent {
   color = '#ff000060';
   color2 = 'rgba(200, 100, 100, 1)';
   color3 = 'hsla(200, 100%, 50%, 1)';
+
+  format: ColorFormat = 'hex';
 
   log(type: string, e: any) {
     console.log(type, e);

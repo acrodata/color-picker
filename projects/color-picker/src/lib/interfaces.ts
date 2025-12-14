@@ -62,3 +62,10 @@ export interface Shape {
   color: string;
   title: string;
 }
+
+export type ColorFormat = 'hex' | 'rgb' | 'hsl' | 'hsv';
+
+export interface ColorEvent {
+  color: Color;
+  $event: Event;
+}
