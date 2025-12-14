@@ -55,22 +55,15 @@ export enum ColorMode {
 export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
   private cdr = inject(ChangeDetectorRef);
 
-  /** Descriptors the return color format if the component is used with two-way binding */
   @Input() mode = ColorMode.HEX;
 
-  @Input() color: HSLA | HSVA | RGBA | string = {
-    h: 250,
-    s: 0.5,
-    l: 0.2,
-    a: 1,
-  };
+  @Input() color: HSLA | HSVA | RGBA | string = { h: 250, s: 0.5, l: 0.2, a: 1 };
+
   @Output() colorChange = new EventEmitter<HSLA | HSVA | RGBA | string>();
 
-  @Output() change = new EventEmitter<ColorEvent>();
+  @Output() valueChange = new EventEmitter<ColorEvent>();
 
-  @Output() afterChanged = new EventEmitter<ColorEvent>();
-
-  @Output() swatchHover = new EventEmitter<ColorEvent>();
+  @Output() valueChanged = new EventEmitter<ColorEvent>();
 
   oldHue!: number;
   hsl!: HSLA;
@@ -80,31 +73,30 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   source = '';
   currentColor = '';
   disableAlpha = false;
-  changes = Subscription.EMPTY;
 
   activeBackground = '';
 
-  private afterChangedSubscription = new Subscription();
-  private swatchHoverSubscription = new Subscription();
+  private valueChangeSub = Subscription.EMPTY;
+  private valueChangedSub = new Subscription();
 
   ngOnInit() {
-    this.changes = this.change
+    this.valueChangeSub = this.valueChange
       .pipe(
         debounceTime(100),
-        tap(event => {
-          this.afterChanged.emit(event);
+        tap(e => {
+          this.valueChanged.emit(e);
           switch (this.mode) {
             case ColorMode.HEX:
-              this.colorChange.emit(event.color.hex);
+              this.colorChange.emit(e.color.hex);
               break;
             case ColorMode.HSL:
-              this.colorChange.emit(event.color.hsl);
+              this.colorChange.emit(e.color.hsl);
               break;
             case ColorMode.HSV:
-              this.colorChange.emit(event.color.hsv);
+              this.colorChange.emit(e.color.hsv);
               break;
             case ColorMode.RGB:
-              this.colorChange.emit(event.color.rgb);
+              this.colorChange.emit(e.color.rgb);
               break;
             default: {
               const msg = `The mode '${this.mode}' is not supported`;
@@ -128,9 +120,8 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   }
 
   ngOnDestroy() {
-    this.changes.unsubscribe();
-    this.afterChangedSubscription.unsubscribe();
-    this.swatchHoverSubscription.unsubscribe();
+    this.valueChangeSub.unsubscribe();
+    this.valueChangedSub.unsubscribe();
   }
 
   writeValue(value: any): void {
@@ -141,14 +132,10 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   }
 
   registerOnChange(fn: (hex: string) => void): void {
-    this.afterChangedSubscription.add(
-      this.afterChanged.pipe(tap(event => fn(event.color.hex))).subscribe()
-    );
+    this.valueChangedSub.add(this.valueChanged.pipe(tap(e => fn(e.color.hex))).subscribe());
   }
 
-  registerOnTouched(fn: () => void): void {
-    this.swatchHoverSubscription.add(this.swatchHover.pipe(tap(() => fn())).subscribe());
-  }
+  registerOnTouched(fn: () => void): void {}
 
   setDisabledState(isDisabled: boolean): void {}
 
@@ -168,7 +155,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     if (isValidColor) {
       const color = toState(data, data.h || this.oldHue, this.disableAlpha);
       this.setState(color);
-      this.change.emit({ color, $event });
+      this.valueChange.emit({ color, $event });
       this.afterValidChange();
     }
   }
@@ -176,14 +163,5 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   afterValidChange() {
     const alpha = this.disableAlpha ? 1 : this.rgb.a;
     this.activeBackground = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${alpha})`;
-  }
-
-  handleSwatchHover(data: any, $event: Event) {
-    const isValidColor = simpleCheckForValidColor(data);
-    if (isValidColor) {
-      const color = toState(data, data.h || this.oldHue);
-      this.setState(color);
-      this.swatchHover.emit({ color, $event });
-    }
   }
 }

@@ -1,5 +1,4 @@
 import { TinyColor } from '@ctrl/tinycolor';
-
 import { Color } from './interfaces';
 
 export function simpleCheckForValidColor(data: any) {

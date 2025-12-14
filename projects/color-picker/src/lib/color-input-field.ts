@@ -38,12 +38,12 @@ let nextUniqueId = 0;
 })
 export class ColorInputField implements OnChanges, OnDestroy {
   @Input() label = '';
-  @Input() value!: string | number;
   @Input() arrowOffset!: number;
   @Input() dragLabel = false;
   @Input() dragMax!: number;
   @Input() placeholder = '';
-  @Output() change = new EventEmitter<{
+  @Input() value!: string | number;
+  @Output() valueChange = new EventEmitter<{
     data: Record<string, number | string> | number | string;
     $event: KeyboardEvent | PointerEvent;
   }>();
@@ -51,7 +51,7 @@ export class ColorInputField implements OnChanges, OnDestroy {
   currentValue!: string | number;
   blurValue = '';
   focus = false;
-  uniqueId: string = `color-editable-input-${++nextUniqueId}`;
+  uniqueId: string = `color-input-${++nextUniqueId}`;
 
   pointerMoveSub = Subscription.EMPTY;
   pointerUpSub = Subscription.EMPTY;
@@ -94,12 +94,12 @@ export class ColorInputField implements OnChanges, OnDestroy {
     // Up
     if (e.keyCode === 38) {
       if (this.label) {
-        this.change.emit({
+        this.valueChange.emit({
           data: { [this.label]: num + amount },
           $event: e,
         });
       } else {
-        this.change.emit({ data: num + amount, $event: e });
+        this.valueChange.emit({ data: num + amount, $event: e });
       }
 
       if (isPercentage) {
@@ -112,12 +112,12 @@ export class ColorInputField implements OnChanges, OnDestroy {
     // Down
     if (e.keyCode === 40) {
       if (this.label) {
-        this.change.emit({
+        this.valueChange.emit({
           data: { [this.label]: num - amount },
           $event: e,
         });
       } else {
-        this.change.emit({ data: num - amount, $event: e });
+        this.valueChange.emit({ data: num - amount, $event: e });
       }
 
       if (isPercentage) {
@@ -138,12 +138,12 @@ export class ColorInputField implements OnChanges, OnDestroy {
     }
 
     if (this.label) {
-      this.change.emit({
+      this.valueChange.emit({
         data: { [this.label]: target.value },
         $event: e,
       });
     } else {
-      this.change.emit({ data: target.value, $event: e });
+      this.valueChange.emit({ data: target.value, $event: e });
     }
   }
 
@@ -171,7 +171,7 @@ export class ColorInputField implements OnChanges, OnDestroy {
     if (this.dragLabel) {
       const newValue = Math.round(+this.value + e.movementX);
       if (newValue >= 0 && newValue <= this.dragMax) {
-        this.change.emit({
+        this.valueChange.emit({
           data: { [this.label]: newValue },
           $event: e,
         });

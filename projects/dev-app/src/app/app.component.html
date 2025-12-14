@@ -1,3 +1,8 @@
-<color-picker [(ngModel)]="color" (change)="log($event)" />
+<color-picker
+  [(ngModel)]="color"
+  (ngModelChange)="log('ngModelChange', $event)"
+  (colorChange)="log('colorChange', $event)"
+  (valueChange)="log('valueChange', $event)"
+  (valueChanged)="log('valueChanged', $event)"
+/>
 {{ color }}
-

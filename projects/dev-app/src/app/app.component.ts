@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 export class AppComponent {
   color = '#ff0000';
 
-  log(e: any) {
-    console.log(e);
+  log(type: string, e: any) {
+    console.log(type, e);
   }
 }

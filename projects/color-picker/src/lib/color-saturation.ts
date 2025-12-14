@@ -45,9 +45,9 @@ export class ColorSaturation implements OnChanges {
   @Input() radius!: number;
   @Output() change = new EventEmitter<{ data: HSVAsource; $event: PointerEvent }>();
 
-  background!: string;
-  pointerTop!: string;
-  pointerLeft!: string;
+  background = '';
+  pointerTop = '';
+  pointerLeft = '';
 
   ngOnChanges() {
     this.background = `hsl(${this.hsl.h}, 100%, 50%)`;

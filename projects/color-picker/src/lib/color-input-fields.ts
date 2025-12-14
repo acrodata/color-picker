@@ -18,33 +18,33 @@ import { isValidHex } from './utils';
   template: `
     <div class="color-input-field-wrapper">
       @if (format === 'hex') {
-        <color-input-field label="hex" [value]="hex" (change)="handleChange($event)" />
+        <color-input-field label="hex" [value]="hex" (valueChange)="handleChange($event)" />
       }
       @if (format === 'rgb') {
-        <color-input-field label="r" [value]="rgb.r" (change)="handleChange($event)" />
-        <color-input-field label="g" [value]="rgb.g" (change)="handleChange($event)" />
-        <color-input-field label="b" [value]="rgb.b" (change)="handleChange($event)" />
+        <color-input-field label="r" [value]="rgb.r" (valueChange)="handleChange($event)" />
+        <color-input-field label="g" [value]="rgb.g" (valueChange)="handleChange($event)" />
+        <color-input-field label="b" [value]="rgb.b" (valueChange)="handleChange($event)" />
 
         @if (!disableAlpha) {
           <color-input-field
             label="a"
             [value]="rgb.a"
             [arrowOffset]="0.01"
-            (change)="handleChange($event)"
+            (valueChange)="handleChange($event)"
           />
         }
       }
       @if (format === 'hsl') {
-        <color-input-field label="h" [value]="round(hsl.h)" (change)="handleChange($event)" />
+        <color-input-field label="h" [value]="round(hsl.h)" (valueChange)="handleChange($event)" />
         <color-input-field
           label="s"
           [value]="round(hsl.s * 100) + '%'"
-          (change)="handleChange($event)"
+          (valueChange)="handleChange($event)"
         />
         <color-input-field
           label="l"
           [value]="round(hsl.l * 100) + '%'"
-          (change)="handleChange($event)"
+          (valueChange)="handleChange($event)"
         />
 
         @if (!disableAlpha) {
@@ -52,7 +52,7 @@ import { isValidHex } from './utils';
             label="a"
             [value]="hsl.a"
             [arrowOffset]="0.01"
-            (change)="handleChange($event)"
+            (valueChange)="handleChange($event)"
           />
         }
       }
@@ -79,7 +79,7 @@ export class ColorInputFields implements OnInit {
   @Input() hsl!: HSLA;
   @Input() rgb!: RGBA;
   @Input() hex = '';
-  @Output() change = new EventEmitter<{
+  @Output() valueChange = new EventEmitter<{
     data: HEXsource | RGBsource | HSLAsource | HSLsource;
     $event: KeyboardEvent | PointerEvent;
   }>();
@@ -117,7 +117,7 @@ export class ColorInputFields implements OnInit {
     if (data.hex) {
       if (isValidHex(data.hex)) {
         const color = new TinyColor(data.hex);
-        this.change.emit({
+        this.valueChange.emit({
           data: {
             hex: this.disableAlpha ? color.toHex() : color.toHex8(),
             source: 'hex',
@@ -126,7 +126,7 @@ export class ColorInputFields implements OnInit {
         });
       }
     } else if (data.r || data.g || data.b) {
-      this.change.emit({
+      this.valueChange.emit({
         data: {
           r: data.r || this.rgb.r,
           g: data.g || this.rgb.g,
@@ -146,7 +146,7 @@ export class ColorInputFields implements OnInit {
         data.a = 1;
       }
 
-      this.change.emit({
+      this.valueChange.emit({
         data: {
           h: this.hsl.h,
           s: this.hsl.s,
@@ -159,7 +159,7 @@ export class ColorInputFields implements OnInit {
     } else if (data.h || data.s || data.l) {
       const s = data.s && data.s.replace('%', '');
       const l = data.l && data.l.replace('%', '');
-      this.change.emit({
+      this.valueChange.emit({
         data: {
           h: data.h || this.hsl.h,
           s: Number(s || this.hsl.s),
