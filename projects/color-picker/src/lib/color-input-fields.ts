@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -79,7 +80,7 @@ export class ColorInputFields implements OnChanges {
 
   @Output() formatChange = new EventEmitter<ColorFormat>();
 
-  @Input() disableAlpha = false;
+  @Input({ transform: booleanAttribute }) disableAlpha = false;
 
   @Input() hsl!: HSLA;
 

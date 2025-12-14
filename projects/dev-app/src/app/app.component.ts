@@ -15,6 +15,8 @@ export class AppComponent {
 
   format: ColorFormat = 'hex';
 
+  disableAlpha = false;
+
   log(type: string, e: any) {
     console.log(type, e);
   }

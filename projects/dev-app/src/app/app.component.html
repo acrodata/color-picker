@@ -1,3 +1,5 @@
+<textarea [(ngModel)]="color"></textarea>
+
 <label>
   <input type="radio" name="format" value="hex" [(ngModel)]="format" />
   <span>hex</span>
@@ -15,7 +17,13 @@
   <span>hsv</span>
 </label>
 
+<label>
+  <input type="checkbox" name="disableAlpha" [(ngModel)]="disableAlpha" />
+  <span>disableAlpha</span>
+</label>
+
 <color-picker
+  [disableAlpha]="disableAlpha"
   [(format)]="format"
   [(ngModel)]="color"
   (ngModelChange)="log('ngModelChange', $event)"

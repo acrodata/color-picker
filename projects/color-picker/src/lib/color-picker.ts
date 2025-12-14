@@ -1,4 +1,5 @@
 import {
+  booleanAttribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -56,13 +57,16 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   @Output() valueChanged = new EventEmitter<ColorEvent>();
 
+  @Input({ transform: booleanAttribute }) disableAlpha = false;
+
+  @Input({ transform: booleanAttribute }) disabled = false;
+
   oldHue!: number;
   hsl!: HSLA;
   hsv!: HSVA;
   rgb!: RGBA;
   hex = '';
   source = '';
-  disableAlpha = false;
 
   activeBgColor = '';
 
@@ -80,12 +84,12 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       )
       .subscribe();
     this.format = this.getColorFormat();
-    this.setState(toState(this.color, 0));
+    this.setState(toState(this.color, 0, this.disableAlpha));
   }
 
   ngOnChanges() {
     this.format = this.getColorFormat();
-    this.setState(toState(this.color, this.oldHue));
+    this.setState(toState(this.color, this.oldHue, this.disableAlpha));
   }
 
   ngOnDestroy() {
@@ -97,7 +101,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     if (value) {
       this.color = value;
       this.format = this.getColorFormat();
-      this.setState(toState(this.color, this.oldHue));
+      this.setState(toState(this.color, this.oldHue, this.disableAlpha));
     }
   }
 
@@ -109,7 +113,10 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   registerOnTouched(fn: () => void): void {}
 
-  setDisabledState(isDisabled: boolean): void {}
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+    this.cdr.markForCheck();
+  }
 
   setState(data: Color) {
     this.oldHue = data.oldHue;
