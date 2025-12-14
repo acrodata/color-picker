@@ -18,11 +18,8 @@ import { HSLA, HSVA, HSVAsource } from './interfaces';
       class="color-saturation-picker-content"
       colorCoordinates
       (coordinatesChange)="handleChange($event)"
-      [style.background]="background"
+      [style.background-color]="bgColor"
     >
-      <div class="color-saturation-white">
-        <div class="color-saturation-black"></div>
-      </div>
       <div
         class="color-saturation-picker-pointer"
         [style.top]="pointerTop"
@@ -45,12 +42,12 @@ export class ColorSaturationPicker implements OnChanges {
   @Input() radius!: number;
   @Output() change = new EventEmitter<{ data: HSVAsource; $event: PointerEvent }>();
 
-  background = '';
+  bgColor = '';
   pointerTop = '';
   pointerLeft = '';
 
   ngOnChanges() {
-    this.background = `hsl(${this.hsl.h}, 100%, 50%)`;
+    this.bgColor = `hsl(${this.hsl.h}, 100%, 50%)`;
     this.pointerTop = -(this.hsv.v * 100) + 100 + '%';
     this.pointerLeft = this.hsv.s * 100 + '%';
   }
