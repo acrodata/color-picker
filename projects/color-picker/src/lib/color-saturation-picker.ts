@@ -11,35 +11,35 @@ import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
 import { HSLA, HSVA, HSVAsource } from './interfaces';
 
 @Component({
-  selector: 'color-saturation',
+  selector: 'color-saturation-picker',
   imports: [ColorCoordinates],
   template: `
     <div
-      class="color-saturation-area"
+      class="color-saturation-picker-content"
       colorCoordinates
       (coordinatesChange)="handleChange($event)"
       [style.background]="background"
     >
       <div class="color-saturation-white">
         <div class="color-saturation-black"></div>
-        <div
-          class="color-saturation-area-pointer"
-          [style.top]="pointerTop"
-          [style.left]="pointerLeft"
-        >
-          <div class="color-saturation-area-thumb"></div>
-        </div>
+      </div>
+      <div
+        class="color-saturation-picker-pointer"
+        [style.top]="pointerTop"
+        [style.left]="pointerLeft"
+      >
+        <div class="color-saturation-picker-thumb"></div>
       </div>
     </div>
   `,
-  styleUrl: './color-saturation.scss',
+  styleUrl: './color-saturation-picker.scss',
   host: {
-    class: 'color-saturation',
+    class: 'color-saturation-picker',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorSaturation implements OnChanges {
+export class ColorSaturationPicker implements OnChanges {
   @Input() hsl!: HSLA;
   @Input() hsv!: HSVA;
   @Input() radius!: number;

@@ -11,7 +11,7 @@ import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
 import { HSLA, HSLAsource, RGBA } from './interfaces';
 
 @Component({
-  selector: 'color-alpha',
+  selector: 'color-alpha-slider',
   imports: [ColorCoordinates],
   template: `
     <div
@@ -30,14 +30,14 @@ import { HSLA, HSLAsource, RGBA } from './interfaces';
       </div>
     </div>
   `,
-  styleUrl: './color-alpha.scss',
+  styleUrl: './color-alpha-slider.scss',
   host: {
-    class: 'color-alpha',
+    class: 'color-alpha-slider',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorAlpha implements OnChanges {
+export class ColorAlphaSlider implements OnChanges {
   @Input() hsl!: HSLA;
   @Input() rgb!: RGBA;
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';

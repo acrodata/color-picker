@@ -15,10 +15,10 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { debounceTime, Subscription, tap } from 'rxjs';
-import { ColorAlpha } from './color-alpha';
-import { ColorHue } from './color-hue';
+import { ColorAlphaSlider } from './color-alpha-slider';
+import { ColorHueSlider } from './color-hue-slider';
 import { ColorInputFields } from './color-input-fields';
-import { ColorSaturation } from './color-saturation';
+import { ColorSaturationPicker } from './color-saturation-picker';
 import { Color, HSLA, HSVA, RGBA } from './interfaces';
 import { simpleCheckForValidColor, toState } from './utils';
 
@@ -36,7 +36,7 @@ export enum ColorMode {
 
 @Component({
   selector: 'color-picker',
-  imports: [ColorSaturation, ColorHue, ColorAlpha, ColorInputFields],
+  imports: [ColorSaturationPicker, ColorHueSlider, ColorAlphaSlider, ColorInputFields],
   templateUrl: './color-picker.html',
   styleUrl: './color-picker.scss',
   host: {

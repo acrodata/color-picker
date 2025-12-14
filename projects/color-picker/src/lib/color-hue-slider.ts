@@ -11,7 +11,7 @@ import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
 import { HSLA, HSLAsource } from './interfaces';
 
 @Component({
-  selector: 'color-hue',
+  selector: 'color-hue-slider',
   imports: [ColorCoordinates],
   template: `
     <div
@@ -26,14 +26,14 @@ import { HSLA, HSLAsource } from './interfaces';
       }
     </div>
   `,
-  styleUrl: './color-hue.scss',
+  styleUrl: './color-hue-slider.scss',
   host: {
-    class: 'color-hue',
+    class: 'color-hue-slider',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorHue implements OnChanges {
+export class ColorHueSlider implements OnChanges {
   @Input() hsl!: HSLA;
   @Input() hidePointer = false;
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';

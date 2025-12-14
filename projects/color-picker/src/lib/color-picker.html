@@ -1,14 +1,14 @@
-<color-saturation [hsl]="hsl" [hsv]="hsv" (change)="handleChange($event)" />
+<color-saturation-picker [hsl]="hsl" [hsv]="hsv" (change)="handleChange($event)" />
 
 <div class="color-picker-controls">
   <div class="color-swatch">
     <div class="color-swatch-bg" [style.background]="activeBackground"></div>
   </div>
   <div class="color-hue-alpha">
-    <color-hue [hsl]="hsl" (change)="handleChange($event)" />
+    <color-hue-slider [hsl]="hsl" (change)="handleChange($event)" />
 
     @if (!disableAlpha) {
-      <color-alpha [rgb]="rgb" [hsl]="hsl" (change)="handleChange($event)" />
+      <color-alpha-slider [rgb]="rgb" [hsl]="hsl" (change)="handleChange($event)" />
     }
   </div>
 </div>
