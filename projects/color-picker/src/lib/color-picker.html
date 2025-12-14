@@ -2,7 +2,7 @@
 
 <div class="color-picker-controls">
   <div class="color-swatch">
-    <div class="color-swatch-bg" [style.background]="activeBackground"></div>
+    <div class="color-swatch-bg" [style.background-color]="activeBgColor"></div>
   </div>
   <div class="color-hue-alpha">
     <color-hue-slider [hsl]="hsl" (change)="handleChange($event)" />
@@ -13,4 +13,10 @@
   </div>
 </div>
 
-<color-input-fields [rgb]="rgb" [hsl]="hsl" [hex]="hex" (valueChange)="handleChange($event)" />
+<color-input-fields
+  class="color-picker-controls"
+  [rgb]="rgb"
+  [hsl]="hsl"
+  [hex]="hex"
+  (valueChange)="handleChange($event)"
+/>

@@ -29,9 +29,9 @@ export interface ColorEvent {
 
 export enum ColorMode {
   HEX = 'hex',
+  RGB = 'rgb',
   HSL = 'hsl',
   HSV = 'hsv',
-  RGB = 'rgb',
 }
 
 @Component({
@@ -74,7 +74,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   currentColor = '';
   disableAlpha = false;
 
-  activeBackground = '';
+  activeBgColor = '';
 
   private valueChangeSub = Subscription.EMPTY;
   private valueChangedSub = new Subscription();
@@ -162,6 +162,6 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   afterValidChange() {
     const alpha = this.disableAlpha ? 1 : this.rgb.a;
-    this.activeBackground = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${alpha})`;
+    this.activeBgColor = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${alpha})`;
   }
 }
