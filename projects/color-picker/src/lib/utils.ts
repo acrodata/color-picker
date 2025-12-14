@@ -32,16 +32,14 @@ export function toState(data: any, oldHue?: number, disableAlpha?: boolean): Col
   const hsl = color.toHsl();
   const hsv = color.toHsv();
   const rgb = color.toRgb();
-  const hex = color.toHex();
   if (hsl.s === 0) {
     hsl.h = oldHue || 0;
     hsv.h = oldHue || 0;
   }
-  const transparent = hex === '000000' && rgb.a === 0;
 
   return {
     hsl,
-    hex: transparent ? 'transparent' : color.toHexString(),
+    hex: rgb.a === 1 ? color.toHexString() : color.toHex8String(),
     rgb,
     hsv,
     oldHue: data.h || oldHue || hsl.h,

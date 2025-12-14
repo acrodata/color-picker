@@ -100,11 +100,7 @@ export class ColorInputFields implements OnInit {
     } else if (this.format === 'rgb') {
       this.format = 'hsl';
     } else if (this.format === 'hsl') {
-      if (this.hsl.a === 1) {
-        this.format = 'hex';
-      } else {
-        this.format = 'rgb';
-      }
+      this.format = 'hex';
     }
   }
 
@@ -157,8 +153,8 @@ export class ColorInputFields implements OnInit {
         $event,
       });
     } else if (data.h || data.s || data.l) {
-      const s = data.s && data.s.replace('%', '');
-      const l = data.l && data.l.replace('%', '');
+      const s = typeof data.s === 'string' ? data.s.replace('%', '') : data.s;
+      const l = typeof data.l === 'string' ? data.l.replace('%', '') : data.l;
       this.valueChange.emit({
         data: {
           h: data.h || this.hsl.h,
