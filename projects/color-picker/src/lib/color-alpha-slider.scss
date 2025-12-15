@@ -4,11 +4,6 @@
   height: 10px;
 }
 
-.color-alpha-gradient {
-  position: absolute;
-  inset: 0;
-}
-
 .color-alpha-slider-track {
   position: relative;
   height: 100%;
@@ -16,6 +11,12 @@
   background-size: 10px 10px;
   border-radius: 2px;
   touch-action: none;
+}
+
+.color-alpha-gradient {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
 }
 
 .color-alpha-slider-pointer {

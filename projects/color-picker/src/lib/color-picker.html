@@ -1,25 +1,26 @@
 <color-saturation-picker [hsl]="hsl" [hsv]="hsv" (change)="handleChange($event)" />
 
 <div class="color-picker-controls">
-  <div class="color-swatch">
-    <div class="color-swatch-bg" [style.background-color]="activeBgColor"></div>
+  <div class="color-preview">
+    <div class="color-preview-bg" [style.background-color]="activeBgColor"></div>
   </div>
   <div class="color-hue-alpha">
     <color-hue-slider [hsl]="hsl" (change)="handleChange($event)" />
 
     @if (!disableAlpha) {
-      <color-alpha-slider [rgb]="rgb" [hsl]="hsl" (change)="handleChange($event)" />
+      <color-alpha-slider [hsl]="hsl" [rgb]="rgb" (change)="handleChange($event)" />
     }
   </div>
 </div>
 
-<color-input-fields
-  class="color-picker-controls"
-  [disableAlpha]="disableAlpha"
-  [(format)]="format"
-  [rgb]="rgb"
-  [hsl]="hsl"
-  [hex]="hex"
-  (valueChange)="handleChange($event)"
-  (formatChange)="handleFormatChange()"
-/>
+<div class="color-picker-controls">
+  <color-input-fields
+    [disableAlpha]="disableAlpha"
+    [(format)]="format"
+    [hsl]="hsl"
+    [rgb]="rgb"
+    [hex]="hex"
+    (valueChange)="handleChange($event)"
+    (formatChange)="handleFormatChange()"
+  />
+</div>

@@ -1,5 +1,3 @@
-<textarea [(ngModel)]="color"></textarea>
-
 <label>
   <input type="radio" name="format" value="hex" [(ngModel)]="format" />
   <span>hex</span>
@@ -31,10 +29,10 @@
   (valueChange)="log('valueChange', $event)"
   (valueChanged)="log('valueChanged', $event)"
 />
-{{ color }}
+<textarea [(ngModel)]="color"></textarea>
 
 <color-picker [(ngModel)]="color2" />
-{{ color2 }}
+<textarea [(ngModel)]="color2"></textarea>
 
 <color-picker [(color)]="color3" />
-{{ color3 }}
+<textarea [(ngModel)]="color3"></textarea>
