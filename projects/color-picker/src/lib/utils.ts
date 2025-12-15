@@ -39,9 +39,12 @@ export function toState(data: any, oldHue?: number, disableAlpha?: boolean): Col
 
   return {
     hsl,
-    hex: rgb.a === 1 ? color.toHexString() : color.toHex8String(),
-    rgb,
+    hslString: color.toHslString(),
     hsv,
+    hsvString: color.toHsvString(),
+    rgb,
+    rgbString: color.toRgbString(),
+    hex: rgb.a === 1 ? color.toHexString() : color.toHex8String(),
     oldHue: data.h || oldHue || hsl.h,
     source: data.source,
   };

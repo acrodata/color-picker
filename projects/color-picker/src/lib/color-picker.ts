@@ -12,6 +12,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -61,11 +62,11 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   @Input({ transform: booleanAttribute }) disabled = false;
 
-  oldHue!: number;
   hsl!: HSLA;
   hsv!: HSVA;
   rgb!: RGBA;
   hex = '';
+  oldHue!: number;
   source = '';
 
   activeBgColor = '';
@@ -78,20 +79,24 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       .pipe(
         debounceTime(100),
         tap(e => {
-          this.color = this.getColorString(e.color);
+          this.getColorString(e.color);
           this.valueChanged.emit(e);
           this.colorChange.emit(this.color);
         })
       )
       .subscribe();
 
-    this.format = this.getColorFormat();
+    this.getColorFormat();
     this.setState(toState(this.color, 0, this.disableAlpha));
   }
 
-  ngOnChanges() {
-    this.format = this.getColorFormat();
-    this.setState(toState(this.color, this.oldHue, this.disableAlpha));
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['format']) {
+      this.getColorFormat();
+    }
+    if (changes['color']) {
+      this.setState(toState(this.color, this.oldHue, this.disableAlpha));
+    }
   }
 
   ngOnDestroy() {
@@ -102,7 +107,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   writeValue(value: any): void {
     if (value) {
       this.color = value;
-      this.format = this.getColorFormat();
+      this.getColorFormat();
       this.setState(toState(this.color, this.oldHue, this.disableAlpha));
     }
   }
@@ -153,30 +158,29 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   }
 
   getColorFormat() {
-    if (this.format != null) {
-      return this.format;
+    if (this.format == null) {
+      const color = new TinyColor(this.color);
+      if (color.format === 'rgb' || color.format === 'hsl' || color.format === 'hsv') {
+        this.format = color.format;
+      } else {
+        this.format = 'hex';
+      }
     }
-    const color = new TinyColor(this.color);
-    if (color.format === 'rgb' || color.format === 'hsl' || color.format === 'hsv') {
-      return color.format;
-    }
-    return 'hex';
   }
 
   getColorString(color: Color) {
-    let colorStr = '';
     switch (this.format) {
       case 'hex':
-        colorStr = color.hex;
+        this.color = color.hex;
         break;
       case 'rgb':
-        colorStr = new TinyColor(color.rgb).toRgbString();
+        this.color = color.rgbString;
         break;
       case 'hsl':
-        colorStr = new TinyColor(color.hsl).toHslString();
+        this.color = color.hslString;
         break;
       case 'hsv':
-        colorStr = new TinyColor(color.hsv).toHsvString();
+        this.color = color.hsvString;
         break;
       default: {
         const msg = `The format '${this.format}' is not supported`;
@@ -188,7 +192,6 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
         break;
       }
     }
-    return colorStr;
   }
 
   handleFormatChange() {

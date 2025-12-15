@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { TinyColor } from '@ctrl/tinycolor';
 import { ColorInputField } from './color-input-field';
-import { ColorFormat, HEXsource, HSLA, HSLAsource, HSLsource, RGBA, RGBsource } from './interfaces';
+import { ColorFormat, HSLA, RGBA } from './interfaces';
 import { isValidHex } from './utils';
 
 @Component({
@@ -89,7 +89,7 @@ export class ColorInputFields implements OnChanges {
   @Input() hex = '';
 
   @Output() valueChange = new EventEmitter<{
-    data: HEXsource | RGBsource | HSLAsource | HSLsource;
+    data: Record<string, any>;
     $event: KeyboardEvent | PointerEvent | MouseEvent;
   }>();
 

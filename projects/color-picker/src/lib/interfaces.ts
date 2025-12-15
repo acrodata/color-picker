@@ -28,20 +28,7 @@ export interface HSVA extends HSV {
   a: number;
 }
 
-export interface HEXsource {
-  hex: string;
-  source: string;
-}
-
-export interface RGBsource extends RGB {
-  source: string;
-}
-
 export interface HSVAsource extends HSVA {
-  source: string;
-}
-
-export interface HSLsource extends HSL {
   source: string;
 }
 
@@ -50,10 +37,13 @@ export interface HSLAsource extends HSLA {
 }
 
 export interface Color {
-  hex: string;
-  rgb: RGBA;
   hsl: HSLA;
+  hslString: string;
   hsv: HSVA;
+  hsvString: string;
+  rgb: RGBA;
+  rgbString: string;
+  hex: string;
   oldHue: number;
   source: string;
 }
