@@ -9,6 +9,7 @@
     border: none;
     border-radius: var(--cp-input-shape, 4px);
     outline: 1px solid var(--cp-input-outline-color, #e6e6e6);
+    font-family: var(--cp-input-text-font, monospace);
     font-size: inherit;
     text-align: inherit;
 
@@ -16,7 +17,7 @@
       outline-color: var(--cp-input-hover-outline-color, #d6d6d6);
     }
 
-    &:focus-within {
+    &:focus {
       outline-color: var(--cp-input-focus-outline-color, #0d99ff);
     }
   }

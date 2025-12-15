@@ -1,4 +1,25 @@
 <label>
+  <input
+    type="radio"
+    name="theme"
+    value="light"
+    [(ngModel)]="theme"
+    (ngModelChange)="onThemeChange()"
+  />
+  light
+</label>
+<label>
+  <input
+    type="radio"
+    name="theme"
+    value="dark"
+    [(ngModel)]="theme"
+    (ngModelChange)="onThemeChange()"
+  />
+  dark
+</label>
+
+<label>
   <input type="radio" name="format" value="hex" [(ngModel)]="format" />
   <span>hex</span>
 </label>

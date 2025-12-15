@@ -1,4 +1,11 @@
 .color-picker {
+  --cp-container-background-color: light-dark(#fff, #2c2c2c);
+  --cp-input-outline-color: light-dark(#e6e6e6, #444);
+  --cp-input-hover-outline-color: light-dark(#d6d6d6, #545454);
+  --cp-input-focus-outline-color: light-dark(#0d99ff, #0c8ce9);
+  --cp-icon-button-hover-background-color: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.06));
+  --cp-icon-button-active-background-color: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.12));
+
   display: block;
   width: var(--cp-container-width, 240px);
   padding: var(--cp-container-padding, 12px);
@@ -8,7 +15,7 @@
       0 2px 4px 0 rgba(0, 0, 0, 0.16),
       0 8px 16px 0 rgba(0, 0, 0, 0.12),
       0 0 1px 0 rgba(0, 0, 0, 0.12));
-  background-color: var(--cp-container-background-color);
+  background-color: var(--cp-container-background-color, #fff);
   border-radius: var(--cp-container-shape, 8px);
 }
 
@@ -27,7 +34,9 @@
   overflow: hidden;
   background-image: conic-gradient(transparent 25%, #ccc 25% 50%, transparent 50% 75%, #ccc 75%);
   background-size: 10px 10px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.12);
 }
 
 .color-preview-bg {
