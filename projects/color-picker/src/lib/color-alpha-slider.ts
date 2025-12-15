@@ -39,24 +39,28 @@ import { HSLA, HSLAsource, RGBA } from './interfaces';
 })
 export class ColorAlphaSlider implements OnChanges {
   @Input() hsl!: HSLA;
+
   @Input() rgb!: RGBA;
+
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
+
   @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
 
+  pointerLeft: number | null = null;
+  pointerTop: number | null = null;
+
   gradient = '';
-  pointerLeft!: number;
-  pointerTop!: number;
 
   ngOnChanges() {
+    const { r, g, b, a } = this.rgb;
     if (this.direction === 'vertical') {
-      this.pointerLeft = 0;
-      this.pointerTop = this.rgb.a * 100;
-      this.gradient = `linear-gradient(to bottom, rgba(${this.rgb.r},${this.rgb.g},${this.rgb.b}, 0) 0%,
-          rgba(${this.rgb.r},${this.rgb.g},${this.rgb.b}, 1) 100%)`;
+      this.pointerLeft = null;
+      this.pointerTop = a * 100;
+      this.gradient = `linear-gradient(to bottom, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
     } else {
-      this.gradient = `linear-gradient(to right, rgba(${this.rgb.r},${this.rgb.g},${this.rgb.b}, 0) 0%,
-          rgba(${this.rgb.r},${this.rgb.g},${this.rgb.b}, 1) 100%)`;
-      this.pointerLeft = this.rgb.a * 100;
+      this.pointerTop = null;
+      this.pointerLeft = a * 100;
+      this.gradient = `linear-gradient(to right, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
     }
   }
 

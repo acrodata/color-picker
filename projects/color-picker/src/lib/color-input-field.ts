@@ -3,12 +3,12 @@ import {
   Component,
   EventEmitter,
   Input,
+  numberAttribute,
   OnChanges,
-  OnDestroy,
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 let nextUniqueId = 0;
 
@@ -26,7 +26,7 @@ let nextUniqueId = 0;
       [attr.aria-labelledby]="uniqueId"
     />
     @if (label) {
-      <span [id]="uniqueId" (pointerdown)="handlePointerdown($event)">{{ label }}</span>
+      <span [id]="uniqueId">{{ label }}</span>
     }
   `,
   host: {
@@ -36,37 +36,36 @@ let nextUniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorInputField implements OnChanges, OnDestroy {
+export class ColorInputField implements OnChanges {
   @Input() label = '';
-  @Input() arrowOffset!: number;
-  @Input() dragLabel = false;
-  @Input() dragMax!: number;
+
+  @Input({ transform: numberAttribute }) step = 1;
+
   @Input() placeholder = '';
-  @Input() value!: string | number;
+
+  @Input() value: string | number = '';
+
   @Output() valueChange = new EventEmitter<{
     data: Record<string, number | string> | number | string;
-    $event: KeyboardEvent | PointerEvent;
+    $event: KeyboardEvent;
   }>();
 
-  currentValue!: string | number;
-  blurValue = '';
+  uniqueId = `color-input-${++nextUniqueId}`;
+
   focus = false;
-  uniqueId: string = `color-input-${++nextUniqueId}`;
+  currentValue: string | number = '';
+  blurValue = '';
 
   pointerMoveSub = Subscription.EMPTY;
   pointerUpSub = Subscription.EMPTY;
 
   ngOnChanges() {
     if (!this.focus) {
-      this.currentValue = String(this.value).toUpperCase();
-      this.blurValue = String(this.value).toUpperCase();
+      this.currentValue = String(this.value);
+      this.blurValue = String(this.value);
     } else {
-      this.blurValue = String(this.value).toUpperCase();
+      this.blurValue = String(this.value);
     }
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe();
   }
 
   handleFocus(e: FocusEvent) {
@@ -89,23 +88,23 @@ export class ColorInputField implements OnChanges, OnDestroy {
     if (isNaN(num)) {
       return;
     }
-    const amount = this.arrowOffset || 1;
+    const step = this.step || 1;
 
     // Up
     if (e.keyCode === 38) {
       if (this.label) {
         this.valueChange.emit({
-          data: { [this.label]: num + amount },
+          data: { [this.label]: num + step },
           $event: e,
         });
       } else {
-        this.valueChange.emit({ data: num + amount, $event: e });
+        this.valueChange.emit({ data: num + step, $event: e });
       }
 
       if (isPercentage) {
-        this.currentValue = `${num + amount}%`;
+        this.currentValue = `${num + step}%`;
       } else {
-        this.currentValue = num + amount;
+        this.currentValue = num + step;
       }
     }
 
@@ -113,17 +112,17 @@ export class ColorInputField implements OnChanges, OnDestroy {
     if (e.keyCode === 40) {
       if (this.label) {
         this.valueChange.emit({
-          data: { [this.label]: num - amount },
+          data: { [this.label]: num - step },
           $event: e,
         });
       } else {
-        this.valueChange.emit({ data: num - amount, $event: e });
+        this.valueChange.emit({ data: num - step, $event: e });
       }
 
       if (isPercentage) {
-        this.currentValue = `${num - amount}%`;
+        this.currentValue = `${num - step}%`;
       } else {
-        this.currentValue = num - amount;
+        this.currentValue = num - step;
       }
     }
   }
@@ -144,38 +143,6 @@ export class ColorInputField implements OnChanges, OnDestroy {
       });
     } else {
       this.valueChange.emit({ data: target.value, $event: e });
-    }
-  }
-
-  subscribe() {
-    this.pointerMoveSub = fromEvent<PointerEvent>(document, 'pointermove').subscribe(e =>
-      this.handleDrag(e)
-    );
-    this.pointerUpSub = fromEvent(document, 'pointerup').subscribe(() => this.unsubscribe());
-  }
-
-  unsubscribe() {
-    this.pointerMoveSub.unsubscribe();
-    this.pointerUpSub.unsubscribe();
-  }
-
-  handlePointerdown(e: PointerEvent) {
-    if (this.dragLabel) {
-      e.preventDefault();
-      this.handleDrag(e);
-      this.subscribe();
-    }
-  }
-
-  handleDrag(e: PointerEvent) {
-    if (this.dragLabel) {
-      const newValue = Math.round(+this.value + e.movementX);
-      if (newValue >= 0 && newValue <= this.dragMax) {
-        this.valueChange.emit({
-          data: { [this.label]: newValue },
-          $event: e,
-        });
-      }
     }
   }
 }

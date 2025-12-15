@@ -29,8 +29,8 @@ import { isValidHex } from './utils';
         @if (!disableAlpha) {
           <color-input-field
             label="a"
+            step="0.01"
             [value]="rgb.a"
-            [arrowOffset]="0.01"
             (valueChange)="handleChange($event)"
           />
         }
@@ -51,15 +51,15 @@ import { isValidHex } from './utils';
         @if (!disableAlpha) {
           <color-input-field
             label="a"
+            step="0.01"
             [value]="hsl.a"
-            [arrowOffset]="0.01"
             (valueChange)="handleChange($event)"
           />
         }
       }
     </div>
 
-    <button class="color-format-toggle" (click)="toggleColorFormat($event)">
+    <button class="color-format-toggle" type="button" (click)="toggleColorFormat($event)">
       <svg viewBox="0 0 24 24">
         <path
           fill="currentColor"
@@ -90,7 +90,7 @@ export class ColorInputFields implements OnChanges {
 
   @Output() valueChange = new EventEmitter<{
     data: Record<string, any>;
-    $event: KeyboardEvent | PointerEvent | MouseEvent;
+    $event: KeyboardEvent | MouseEvent;
   }>();
 
   ngOnChanges(): void {
@@ -117,7 +117,7 @@ export class ColorInputFields implements OnChanges {
     return Math.round(value);
   }
 
-  handleChange(e: { data: any; $event: KeyboardEvent | PointerEvent | MouseEvent }) {
+  handleChange(e: { data: any; $event: KeyboardEvent | MouseEvent }) {
     const { data, $event } = e;
     if (data.hex) {
       if (isValidHex(data.hex)) {

@@ -19,11 +19,9 @@ import { HSLA, HSLAsource } from './interfaces';
       (coordinatesChange)="handleChange($event)"
       class="color-hue-slider-track color-hue-{{ direction }}"
     >
-      @if (!hidePointer) {
-        <div class="color-hue-slider-pointer" [style.left]="left" [style.top]="top">
-          <div class="color-hue-slider-thumb"></div>
-        </div>
-      }
+      <div class="color-hue-slider-pointer" [style.left.%]="pointerLeft" [style.top.%]="pointerTop">
+        <div class="color-hue-slider-thumb"></div>
+      </div>
     </div>
   `,
   styleUrl: './color-hue-slider.scss',
@@ -35,18 +33,19 @@ import { HSLA, HSLAsource } from './interfaces';
 })
 export class ColorHueSlider implements OnChanges {
   @Input() hsl!: HSLA;
-  @Input() hidePointer = false;
+
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
+
   @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
 
-  left = '0px';
-  top = '';
+  pointerLeft: number | null = null;
+  pointerTop: number | null = null;
 
   ngOnChanges(): void {
     if (this.direction === 'horizontal') {
-      this.left = `${(this.hsl.h * 100) / 360}%`;
+      this.pointerLeft = (this.hsl.h * 100) / 360;
     } else {
-      this.top = `${-((this.hsl.h * 100) / 360) + 100}%`;
+      this.pointerTop = -((this.hsl.h * 100) / 360) + 100;
     }
   }
 
