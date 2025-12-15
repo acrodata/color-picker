@@ -49,7 +49,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   @Output() formatChange = new EventEmitter<ColorFormat>();
 
-  @Input() color: HSLA | HSVA | RGBA | string = '#000';
+  @Input() color = '#000';
 
   @Output() colorChange = new EventEmitter<string>();
 
@@ -78,11 +78,13 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       .pipe(
         debounceTime(100),
         tap(e => {
+          this.color = this.getColorString(e.color);
           this.valueChanged.emit(e);
-          this.colorChange.emit(this.getColorString(e.color));
+          this.colorChange.emit(this.color);
         })
       )
       .subscribe();
+
     this.format = this.getColorFormat();
     this.setState(toState(this.color, 0, this.disableAlpha));
   }
@@ -107,7 +109,13 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   registerOnChange(fn: (color: string) => void): void {
     this.valueChangedSub.add(
-      this.valueChanged.pipe(tap(e => fn(this.getColorString(e.color)))).subscribe()
+      this.valueChanged
+        .pipe(
+          tap(e => {
+            fn(this.color);
+          })
+        )
+        .subscribe()
     );
   }
 
