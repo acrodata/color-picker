@@ -74,6 +74,15 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   private valueChangeSub = Subscription.EMPTY;
   private valueChangedSub = new Subscription();
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['format']) {
+      this.getColorFormat();
+    }
+    if (changes['color']) {
+      this.setState(toState(this.color, this.oldHue, this.disableAlpha));
+    }
+  }
+
   ngOnInit() {
     this.valueChangeSub = this.valueChange
       .pipe(
@@ -86,17 +95,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       )
       .subscribe();
 
-    this.getColorFormat();
     this.setState(toState(this.color, 0, this.disableAlpha));
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['format']) {
-      this.getColorFormat();
-    }
-    if (changes['color']) {
-      this.setState(toState(this.color, this.oldHue, this.disableAlpha));
-    }
   }
 
   ngOnDestroy() {

@@ -94,7 +94,9 @@ export class ColorInputFields implements OnChanges {
   }>();
 
   ngOnChanges(): void {
-    if (this.format === 'hsv') {
+    if (this.format == null) {
+      this.format = 'hex';
+    } else if (this.format === 'hsv') {
       this.format = 'hsl';
     }
   }
