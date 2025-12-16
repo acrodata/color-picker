@@ -76,13 +76,13 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   oldHue!: number;
   source = '';
 
-  activeBgColor = '';
-
   private valueChangeSub = Subscription.EMPTY;
   private valueChangedSub = new Subscription();
 
   EyeDropper = (window as any).EyeDropper;
   supportEyeDropper = !!this.EyeDropper;
+
+  isCopied = false;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['format']) {
@@ -147,7 +147,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     this.rgb = data.rgb;
     this.hex = data.hex;
     this.source = data.source;
-    this.afterValidChange();
+    this.cdr.markForCheck();
   }
 
   handleChange(e: { data: any; $event: Event }) {
@@ -157,14 +157,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       const color = toState(data, data.h || this.oldHue, this.disableAlpha);
       this.setState(color);
       this.valueChange.emit({ color, $event });
-      this.afterValidChange();
     }
-  }
-
-  afterValidChange() {
-    const alpha = this.disableAlpha ? 1 : this.rgb.a;
-    this.activeBgColor = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${alpha})`;
-    this.cdr.markForCheck();
   }
 
   getColorFormat() {
@@ -215,6 +208,21 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     try {
       const result = await eyeDropper.open();
       this.handleChange({ data: result.sRGBHex, $event: e });
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  async copyColor() {
+    try {
+      await navigator.clipboard.writeText(this.color);
+
+      this.isCopied = true;
+      this.cdr.markForCheck();
+      setTimeout(() => {
+        this.isCopied = false;
+        this.cdr.markForCheck();
+      }, 1000);
     } catch (err) {
       console.warn(err);
     }

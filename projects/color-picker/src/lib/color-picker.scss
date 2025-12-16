@@ -32,16 +32,36 @@
   border-radius: 16px;
   position: relative;
   overflow: hidden;
+  border: none;
+  outline: none;
   background-image: conic-gradient(transparent 25%, #ccc 25% 50%, transparent 50% 75%, #ccc 75%);
   background-size: 10px 10px;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.12),
     0 0 0 1px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    .color-preview-backdrop {
+      opacity: 1;
+    }
+  }
 }
 
 .color-preview-bg {
   position: absolute;
   inset: 0;
+}
+
+.color-preview-backdrop {
+  position: absolute;
+  inset: 0;
+  padding: 6px;
+  background-color: rgba(0, 0, 0, 0.32);
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .color-hue-alpha {
