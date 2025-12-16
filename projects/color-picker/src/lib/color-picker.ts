@@ -20,6 +20,7 @@ import { TinyColor } from '@ctrl/tinycolor';
 import { debounceTime, Subscription, tap } from 'rxjs';
 import { ColorAlphaSlider } from './color-alpha-slider';
 import { ColorHueSlider } from './color-hue-slider';
+import { ColorIconButton } from './color-icon-button';
 import { ColorInputFields } from './color-input-fields';
 import { ColorSaturationPicker } from './color-saturation-picker';
 import { Color, ColorEvent, ColorFormat, HSLA, HSVA, RGBA } from './interfaces';
@@ -27,7 +28,13 @@ import { simpleCheckForValidColor, toState } from './utils';
 
 @Component({
   selector: 'color-picker',
-  imports: [ColorSaturationPicker, ColorHueSlider, ColorAlphaSlider, ColorInputFields],
+  imports: [
+    ColorSaturationPicker,
+    ColorHueSlider,
+    ColorAlphaSlider,
+    ColorInputFields,
+    ColorIconButton,
+  ],
   templateUrl: './color-picker.html',
   styleUrl: './color-picker.scss',
   host: {
@@ -73,6 +80,9 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   private valueChangeSub = Subscription.EMPTY;
   private valueChangedSub = new Subscription();
+
+  EyeDropper = (window as any).EyeDropper;
+  supportEyeDropper = !!this.EyeDropper;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['format']) {
@@ -154,6 +164,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   afterValidChange() {
     const alpha = this.disableAlpha ? 1 : this.rgb.a;
     this.activeBgColor = `rgba(${this.rgb.r}, ${this.rgb.g}, ${this.rgb.b}, ${alpha})`;
+    this.cdr.markForCheck();
   }
 
   getColorFormat() {
@@ -165,6 +176,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
         this.format = 'hex';
       }
     }
+    this.cdr.markForCheck();
   }
 
   getColorString(color: Color) {
@@ -191,9 +203,20 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
         break;
       }
     }
+    this.cdr.markForCheck();
   }
 
   handleFormatChange() {
     this.formatChange.emit(this.format);
+  }
+
+  async openEyeDropper(e: MouseEvent) {
+    const eyeDropper = new this.EyeDropper();
+    try {
+      const result = await eyeDropper.open();
+      this.handleChange({ data: result.sRGBHex, $event: e });
+    } catch (err) {
+      console.warn(err);
+    }
   }
 }
