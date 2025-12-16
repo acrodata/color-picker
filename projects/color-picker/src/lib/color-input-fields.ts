@@ -9,13 +9,14 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { TinyColor } from '@ctrl/tinycolor';
+import { ColorIconButton } from './color-icon-button';
 import { ColorInputField } from './color-input-field';
 import { ColorFormat, HSLA, RGBA } from './interfaces';
 import { isValidHex } from './utils';
 
 @Component({
   selector: 'color-input-fields',
-  imports: [ColorInputField],
+  imports: [ColorInputField, ColorIconButton],
   template: `
     <div class="color-input-field-wrapper">
       @if (format === 'hex') {
@@ -59,14 +60,16 @@ import { isValidHex } from './utils';
       }
     </div>
 
-    <button class="color-format-toggle" type="button" (click)="toggleColorFormat($event)">
-      <svg viewBox="0 0 24 24">
-        <path
-          fill="currentColor"
-          d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
-        />
-      </svg>
-    </button>
+    <color-icon-button>
+      <button type="button" (click)="toggleColorFormat($event)">
+        <svg viewBox="0 0 24 24">
+          <path
+            fill="currentColor"
+            d="M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z"
+          />
+        </svg>
+      </button>
+    </color-icon-button>
   `,
   host: {
     class: 'color-input-fields',
