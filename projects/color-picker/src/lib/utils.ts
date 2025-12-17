@@ -53,15 +53,3 @@ export function toState(data: any, oldHue?: number, disableAlpha?: boolean): Col
 export function isValidHex(hex: string) {
   return new TinyColor(hex).isValid;
 }
-
-export function getContrastingColor(data: any) {
-  if (!data) {
-    return '#fff';
-  }
-  const col = toState(data);
-  if (col.hex === 'transparent') {
-    return 'rgba(0,0,0,0.4)';
-  }
-  const yiq = (col.rgb.r * 299 + col.rgb.g * 587 + col.rgb.b * 114) / 1000;
-  return yiq >= 128 ? '#000' : '#fff';
-}

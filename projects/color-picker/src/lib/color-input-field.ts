@@ -8,7 +8,6 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Subscription } from 'rxjs';
 
 let nextUniqueId = 0;
 
@@ -55,9 +54,6 @@ export class ColorInputField implements OnChanges {
   focus = false;
   currentValue: string | number = '';
   blurValue = '';
-
-  pointerMoveSub = Subscription.EMPTY;
-  pointerUpSub = Subscription.EMPTY;
 
   ngOnChanges() {
     if (!this.focus) {

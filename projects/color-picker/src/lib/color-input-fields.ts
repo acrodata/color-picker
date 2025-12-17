@@ -160,14 +160,9 @@ export class ColorInputFields implements OnChanges {
         $event,
       });
     } else if (data.a) {
-      if (data.a < 0) {
-        data.a = 0;
-      } else if (data.a > 1) {
-        data.a = 1;
-      }
-
+      let a = Math.max(0, Math.min(1, data.a));
       if (this.disableAlpha) {
-        data.a = 1;
+        a = 1;
       }
 
       this.valueChange.emit({
@@ -175,7 +170,7 @@ export class ColorInputFields implements OnChanges {
           h: this.hsl.h,
           s: this.hsl.s,
           l: this.hsl.l,
-          a: Math.round(data.a * 100) / 100,
+          a: Math.round(a * 100) / 100,
           source: 'rgb',
         },
         $event,

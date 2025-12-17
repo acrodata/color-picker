@@ -19,7 +19,7 @@ import { HSLA, HSLAsource } from './interfaces';
       (coordinatesChange)="handleChange($event)"
       class="color-hue-slider-track color-hue-{{ direction }}"
     >
-      <div class="color-hue-slider-pointer" [style.left.%]="pointerLeft" [style.top.%]="pointerTop">
+      <div class="color-hue-slider-pointer" [style.left.%]="posX" [style.top.%]="posY">
         <div class="color-hue-slider-thumb"></div>
       </div>
     </div>
@@ -38,66 +38,31 @@ export class ColorHueSlider implements OnChanges {
 
   @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
 
-  pointerLeft: number | null = null;
-  pointerTop: number | null = null;
+  posX: number | null = null;
+  posY: number | null = null;
 
   ngOnChanges(): void {
-    if (this.direction === 'horizontal') {
-      this.pointerLeft = (this.hsl.h * 100) / 360;
+    if (this.direction === 'vertical') {
+      this.posY = 100 - (this.hsl.h * 100) / 360;
     } else {
-      this.pointerTop = -((this.hsl.h * 100) / 360) + 100;
+      this.posX = (this.hsl.h * 100) / 360;
     }
   }
 
-  handleChange(e: CoordinatesChangeEvent): void {
+  handleChange(e: CoordinatesChangeEvent) {
     const { top, left, containerHeight, containerWidth, $event } = e;
-    let data: HSLAsource | undefined;
-    if (this.direction === 'vertical') {
-      let h: number;
-      if (top < 0) {
-        h = 359;
-      } else if (top > containerHeight) {
-        h = 0;
-      } else {
-        const percent = -((top * 100) / containerHeight) + 100;
-        h = (360 * percent) / 100;
-      }
 
-      if (this.hsl.h !== h) {
-        data = {
-          h,
-          s: this.hsl.s,
-          l: this.hsl.l,
-          a: this.hsl.a,
-          source: 'rgb',
-        };
-      }
-    } else {
-      let h: number;
-      if (left < 0) {
-        h = 0;
-      } else if (left > containerWidth) {
-        h = 359;
-      } else {
-        const percent = (left * 100) / containerWidth;
-        h = (360 * percent) / 100;
-      }
+    const isVertical = this.direction === 'vertical';
+    const pos = isVertical ? top : left;
+    const size = isVertical ? containerHeight : containerWidth;
 
-      if (this.hsl.h !== h) {
-        data = {
-          h,
-          s: this.hsl.s,
-          l: this.hsl.l,
-          a: this.hsl.a,
-          source: 'rgb',
-        };
-      }
+    const ratio = Math.max(0, Math.min(pos, size)) / size;
+    let h = isVertical ? (1 - ratio) * 360 : ratio * 360;
+    h = h >= 360 ? 359 : h;
+
+    if (this.hsl.h !== h) {
+      const data: HSLAsource = { ...this.hsl, h, source: 'rgb' };
+      this.change.emit({ data, $event });
     }
-
-    if (!data) {
-      return;
-    }
-
-    this.change.emit({ data, $event });
   }
 }

@@ -20,11 +20,7 @@ import { HSLA, HSVA, HSVAsource } from './interfaces';
       (coordinatesChange)="handleChange($event)"
       [style.background-color]="bgColor"
     >
-      <div
-        class="color-saturation-picker-pointer"
-        [style.left.%]="pointerLeft"
-        [style.top.%]="pointerTop"
-      >
+      <div class="color-saturation-picker-pointer" [style.left.%]="posX" [style.top.%]="posY">
         <div class="color-saturation-picker-thumb"></div>
       </div>
     </div>
@@ -44,42 +40,23 @@ export class ColorSaturationPicker implements OnChanges {
   @Output() change = new EventEmitter<{ data: HSVAsource; $event: PointerEvent }>();
 
   bgColor = '';
-  pointerLeft: number | null = null;
-  pointerTop: number | null = null;
+
+  posX: number | null = null;
+  posY: number | null = null;
 
   ngOnChanges() {
     this.bgColor = `hsl(${this.hsl.h}, 100%, 50%)`;
-    this.pointerLeft = this.hsv.s * 100;
-    this.pointerTop = -(this.hsv.v * 100) + 100;
+    this.posX = this.hsv.s * 100;
+    this.posY = 100 - this.hsv.v * 100;
   }
 
   handleChange(e: CoordinatesChangeEvent) {
-    const { containerHeight, containerWidth, $event } = e;
-    let { top, left } = e;
-    if (left < 0) {
-      left = 0;
-    } else if (left > containerWidth) {
-      left = containerWidth;
-    }
-    if (top < 0) {
-      top = 0;
-    } else if (top > containerHeight) {
-      top = containerHeight;
-    }
+    const { top, left, containerHeight, containerWidth, $event } = e;
 
-    const saturation = left / containerWidth;
-    let bright = -(top / containerHeight) + 1;
-    bright = bright > 0 ? bright : 0;
-    bright = bright > 1 ? 1 : bright;
+    const s = Math.max(0, Math.min(left, containerWidth)) / containerWidth;
+    const v = 1 - Math.max(0, Math.min(top, containerHeight)) / containerHeight;
 
-    const data: HSVAsource = {
-      h: this.hsl.h,
-      s: saturation,
-      v: bright,
-      a: this.hsl.a,
-      source: 'hsva',
-    };
-
+    const data: HSVAsource = { ...this.hsv, s, v, source: 'hsva' };
     this.change.emit({ data, $event });
   }
 }

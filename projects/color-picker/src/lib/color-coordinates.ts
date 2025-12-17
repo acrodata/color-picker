@@ -15,9 +15,9 @@ export interface CoordinatesChangeEvent {
 @Directive({
   selector: '[color-coordinates], [colorCoordinates]',
   host: {
-    '(pointerdown)': 'pointerDown($event)',
-    '(pointermove)': 'pointerMove($event)',
-    '(pointerup)': 'pointerUp($event)',
+    '(pointerdown)': 'onDragStart($event)',
+    '(pointermove)': 'onDrag($event)',
+    '(pointerup)': 'onDragEnd($event)',
   },
 })
 export class ColorCoordinates implements OnInit, OnDestroy {
@@ -29,8 +29,7 @@ export class ColorCoordinates implements OnInit, OnDestroy {
   private pointerSub = Subscription.EMPTY;
   private isListening = false;
 
-  pointerDown(e: PointerEvent) {
-    const { x, y } = e;
+  onDragStart(e: PointerEvent) {
     e.preventDefault();
 
     if (this.el.nativeElement.setPointerCapture) {
@@ -41,15 +40,14 @@ export class ColorCoordinates implements OnInit, OnDestroy {
     this.pointerChange.next(e);
   }
 
-  pointerMove(e: PointerEvent) {
-    const { x, y } = e;
+  onDrag(e: PointerEvent) {
     if (this.isListening) {
       e.preventDefault();
       this.pointerChange.next(e);
     }
   }
 
-  pointerUp(e: PointerEvent) {
+  onDragEnd(e: PointerEvent) {
     if (this.isListening) {
       this.isListening = false;
 

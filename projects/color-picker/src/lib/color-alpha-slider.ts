@@ -21,11 +21,7 @@ import { HSLA, HSLAsource, RGBA } from './interfaces';
     >
       <div class="color-alpha-gradient" [style.background]="gradient"></div>
 
-      <div
-        class="color-alpha-slider-pointer"
-        [style.left.%]="pointerLeft"
-        [style.top.%]="pointerTop"
-      >
+      <div class="color-alpha-slider-pointer" [style.left.%]="posX" [style.top.%]="posY">
         <div class="color-alpha-slider-thumb"></div>
       </div>
     </div>
@@ -46,71 +42,37 @@ export class ColorAlphaSlider implements OnChanges {
 
   @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
 
-  pointerLeft: number | null = null;
-  pointerTop: number | null = null;
-
   gradient = '';
+
+  posX: number | null = null;
+  posY: number | null = null;
 
   ngOnChanges() {
     const { r, g, b, a } = this.rgb;
     if (this.direction === 'vertical') {
-      this.pointerLeft = null;
-      this.pointerTop = a * 100;
       this.gradient = `linear-gradient(to bottom, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
+      this.posX = null;
+      this.posY = a * 100;
     } else {
-      this.pointerTop = null;
-      this.pointerLeft = a * 100;
       this.gradient = `linear-gradient(to right, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
+      this.posY = null;
+      this.posX = a * 100;
     }
   }
 
-  handleChange(e: CoordinatesChangeEvent): void {
+  handleChange(e: CoordinatesChangeEvent) {
     const { top, left, containerHeight, containerWidth, $event } = e;
-    let data: HSLAsource | undefined;
-    if (this.direction === 'vertical') {
-      let a: number;
-      if (top < 0) {
-        a = 0;
-      } else if (top > containerHeight) {
-        a = 1;
-      } else {
-        a = Math.round((top * 100) / containerHeight) / 100;
-      }
 
-      if (this.hsl.a !== a) {
-        data = {
-          h: this.hsl.h,
-          s: this.hsl.s,
-          l: this.hsl.l,
-          a,
-          source: 'rgb',
-        };
-      }
-    } else {
-      let a: number;
-      if (left < 0) {
-        a = 0;
-      } else if (left > containerWidth) {
-        a = 1;
-      } else {
-        a = Math.round((left * 100) / containerWidth) / 100;
-      }
+    const isVertical = this.direction === 'vertical';
+    const pos = isVertical ? top : left;
+    const size = isVertical ? containerHeight : containerWidth;
 
-      if (this.hsl.a !== a) {
-        data = {
-          h: this.hsl.h,
-          s: this.hsl.s,
-          l: this.hsl.l,
-          a,
-          source: 'rgb',
-        };
-      }
+    const ratio = Math.max(0, Math.min(pos, size)) / size;
+    const a = Math.round(ratio * 100) / 100;
+
+    if (this.hsl.a !== a) {
+      const data: HSLAsource = { ...this.hsl, a, source: 'rgb' };
+      this.change.emit({ data, $event });
     }
-
-    if (!data) {
-      return;
-    }
-
-    this.change.emit({ data, $event });
   }
 }
