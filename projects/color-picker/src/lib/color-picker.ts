@@ -73,7 +73,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   hsv!: HSVA;
   rgb!: RGBA;
   hex = '';
-  oldHue!: number;
+  oldHue = 0;
   source = '';
 
   private valueChangeSub = Subscription.EMPTY;
