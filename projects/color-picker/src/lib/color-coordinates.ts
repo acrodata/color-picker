@@ -1,6 +1,6 @@
-import { Directive, ElementRef, OnDestroy, OnInit, Output, inject } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { DOCUMENT } from '@angular/common';
+import { Directive, ElementRef, inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
 
 export interface CoordinatesChangeEvent {
   x: number;
@@ -16,46 +16,33 @@ export interface CoordinatesChangeEvent {
   selector: '[color-coordinates], [colorCoordinates]',
   host: {
     '(pointerdown)': 'onDragStart($event)',
-    '(pointermove)': 'onDrag($event)',
-    '(pointerup)': 'onDragEnd($event)',
   },
 })
 export class ColorCoordinates implements OnInit, OnDestroy {
+  private document = inject(DOCUMENT);
   private el = inject<ElementRef<HTMLElement>>(ElementRef);
 
   @Output() coordinatesChange = new Subject<CoordinatesChangeEvent>();
 
   private pointerChange = new Subject<PointerEvent>();
   private pointerSub = Subscription.EMPTY;
-  private isListening = false;
 
   onDragStart(e: PointerEvent) {
     e.preventDefault();
-
-    if (this.el.nativeElement.setPointerCapture) {
-      this.el.nativeElement.setPointerCapture(e.pointerId);
-    }
-
-    this.isListening = true;
     this.pointerChange.next(e);
+    this.document.addEventListener('pointermove', this.onDrag, { passive: false });
+    this.document.addEventListener('pointerup', this.onDragEnd, { passive: false });
   }
 
-  onDrag(e: PointerEvent) {
-    if (this.isListening) {
-      e.preventDefault();
-      this.pointerChange.next(e);
-    }
-  }
+  onDrag = (e: PointerEvent) => {
+    e.preventDefault();
+    this.pointerChange.next(e);
+  };
 
-  onDragEnd(e: PointerEvent) {
-    if (this.isListening) {
-      this.isListening = false;
-
-      if (this.el.nativeElement.releasePointerCapture) {
-        this.el.nativeElement.releasePointerCapture(e.pointerId);
-      }
-    }
-  }
+  onDragEnd = (e: PointerEvent) => {
+    this.document.removeEventListener('pointermove', this.onDrag);
+    this.document.removeEventListener('pointerup', this.onDragEnd);
+  };
 
   ngOnInit() {
     this.pointerSub = this.pointerChange
