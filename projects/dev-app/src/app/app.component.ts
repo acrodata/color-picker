@@ -17,7 +17,7 @@ export class AppComponent {
 
   format: ColorFormat = 'hex';
 
-  disableAlpha = false;
+  hideAlpha = false;
 
   onThemeChange() {
     if (this.theme === 'light') {

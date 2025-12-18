@@ -35,7 +35,7 @@
   <div class="color-hue-alpha">
     <color-hue-slider [hsl]="hsl" (change)="handleChange($event)" />
 
-    @if (!disableAlpha) {
+    @if (!hideAlpha) {
       <color-alpha-slider [hsl]="hsl" [rgb]="rgb" (change)="handleChange($event)" />
     }
   </div>
@@ -43,7 +43,7 @@
 
 <div class="color-picker-controls">
   <color-input-fields
-    [disableAlpha]="disableAlpha"
+    [hideAlpha]="hideAlpha"
     [(format)]="format"
     [hsl]="hsl"
     [rgb]="rgb"

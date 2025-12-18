@@ -27,7 +27,7 @@ import { isValidHex } from './utils';
         <color-input-field label="g" [value]="rgb.g" (valueChange)="handleChange($event)" />
         <color-input-field label="b" [value]="rgb.b" (valueChange)="handleChange($event)" />
 
-        @if (!disableAlpha) {
+        @if (!hideAlpha) {
           <color-input-field
             label="a"
             step="0.01"
@@ -49,7 +49,7 @@ import { isValidHex } from './utils';
           (valueChange)="handleChange($event)"
         />
 
-        @if (!disableAlpha) {
+        @if (!hideAlpha) {
           <color-input-field
             label="a"
             step="0.01"
@@ -83,7 +83,7 @@ export class ColorInputFields implements OnChanges {
 
   @Output() formatChange = new EventEmitter<ColorFormat>();
 
-  @Input({ transform: booleanAttribute }) disableAlpha = false;
+  @Input({ transform: booleanAttribute }) hideAlpha = false;
 
   @Input() hsl!: HSLA;
 
@@ -138,7 +138,7 @@ export class ColorInputFields implements OnChanges {
         const color = new TinyColor(data.hex);
         this.valueChange.emit({
           data: {
-            hex: this.disableAlpha ? color.toHex() : color.toHex8(),
+            hex: this.hideAlpha ? color.toHex() : color.toHex8(),
             source: 'hex',
           },
           $event,
@@ -170,7 +170,7 @@ export class ColorInputFields implements OnChanges {
       });
     } else if (data.a) {
       let a = Math.max(0, Math.min(1, data.a));
-      if (this.disableAlpha) {
+      if (this.hideAlpha) {
         a = 1;
       }
 

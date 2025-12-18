@@ -37,12 +37,12 @@
 </label>
 
 <label>
-  <input type="checkbox" name="disableAlpha" [(ngModel)]="disableAlpha" />
-  <span>disableAlpha</span>
+  <input type="checkbox" name="hideAlpha" [(ngModel)]="hideAlpha" />
+  <span>hideAlpha</span>
 </label>
 
 <color-picker
-  [disableAlpha]="disableAlpha"
+  [hideAlpha]="hideAlpha"
   [(format)]="format"
   [(ngModel)]="color"
   (ngModelChange)="log('ngModelChange', $event)"

@@ -23,9 +23,9 @@ export function simpleCheckForValidColor(data: any) {
   return checked === passed ? data : false;
 }
 
-export function toState(data: any, oldHue = 0, disableAlpha = false): Color {
+export function toState(data: any, oldHue = 0, hideAlpha = false): Color {
   const color = data.hex ? new TinyColor(data.hex) : new TinyColor(data);
-  if (disableAlpha) {
+  if (hideAlpha) {
     color.setAlpha(1);
   }
 

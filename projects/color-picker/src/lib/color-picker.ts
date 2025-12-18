@@ -72,7 +72,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   @Output() valueChanged = new EventEmitter<ColorEvent>();
 
   /** Whether to hide the alpha channel. */
-  @Input({ transform: booleanAttribute }) disableAlpha = false;
+  @Input({ transform: booleanAttribute }) hideAlpha = false;
 
   /** Whether the color-picker is disabled. */
   @Input({ transform: booleanAttribute }) disabled = false;
@@ -97,7 +97,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       this.getColorFormat();
     }
     if (changes['color']) {
-      this.setState(toState(this.color, this.oldHue, this.disableAlpha));
+      this.setState(toState(this.color, this.oldHue, this.hideAlpha));
     }
   }
 
@@ -113,7 +113,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       )
       .subscribe();
 
-    this.setState(toState(this.color, 0, this.disableAlpha));
+    this.setState(toState(this.color, 0, this.hideAlpha));
   }
 
   ngOnDestroy() {
@@ -125,7 +125,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     if (value) {
       this.color = value;
       this.getColorFormat();
-      this.setState(toState(this.color, this.oldHue, this.disableAlpha));
+      this.setState(toState(this.color, this.oldHue, this.hideAlpha));
     }
   }
 
@@ -162,7 +162,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     const { data, $event } = e;
     const isValidColor = simpleCheckForValidColor(data);
     if (isValidColor) {
-      const color = toState(data, data.h || this.oldHue, this.disableAlpha);
+      const color = toState(data, data.h || this.oldHue, this.hideAlpha);
       this.setState(color);
       this.valueChange.emit({ color, $event });
     }
