@@ -53,20 +53,28 @@ import { simpleCheckForValidColor, toState } from './utils';
 export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
   private cdr = inject(ChangeDetectorRef);
 
+  /** The output format of the color picker. */
   @Input() format?: ColorFormat;
 
+  /** Event emitted when the color format is changed. */
   @Output() formatChange = new EventEmitter<ColorFormat>();
 
+  /** The initial color string. */
   @Input() color = '#000';
 
+  /** Event emitted when the color string is changed. */
   @Output() colorChange = new EventEmitter<string>();
 
+  /** Event emitted when the color changes. */
   @Output() valueChange = new EventEmitter<ColorEvent>();
 
+  /** Event emitted when the color change is finalized. */
   @Output() valueChanged = new EventEmitter<ColorEvent>();
 
+  /** Whether to hide the alpha channel. */
   @Input({ transform: booleanAttribute }) disableAlpha = false;
 
+  /** Whether the color-picker is disabled. */
   @Input({ transform: booleanAttribute }) disabled = false;
 
   hsl!: HSLA;
