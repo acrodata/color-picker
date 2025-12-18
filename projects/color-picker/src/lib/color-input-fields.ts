@@ -107,13 +107,22 @@ export class ColorInputFields implements OnChanges {
   toggleColorFormat(e: MouseEvent) {
     if (this.format === 'hex') {
       this.format = 'rgb';
-      this.handleChange({ data: { ...this.rgb, source: 'rgb' }, $event: e });
+      this.handleChange({
+        data: { ...this.rgb, source: 'rgb' },
+        $event: e,
+      });
     } else if (this.format === 'rgb') {
       this.format = 'hsl';
-      this.handleChange({ data: { ...this.hsl, source: 'hsl' }, $event: e });
+      this.handleChange({
+        data: { ...this.hsl, s: this.hsl.s * 100, l: this.hsl.l * 100, source: 'hsl' },
+        $event: e,
+      });
     } else if (this.format === 'hsl') {
       this.format = 'hex';
-      this.handleChange({ data: { hex: this.hex, source: 'hex' }, $event: e });
+      this.handleChange({
+        data: { hex: this.hex, source: 'hex' },
+        $event: e,
+      });
     }
     this.formatChange.emit(this.format);
   }
@@ -147,13 +156,13 @@ export class ColorInputFields implements OnChanges {
         $event,
       });
     } else if (data.h || data.s || data.l) {
-      const s = typeof data.s === 'string' ? data.s.replace('%', '') : data.s;
-      const l = typeof data.l === 'string' ? data.l.replace('%', '') : data.l;
+      const s = (typeof data.s === 'string' ? Number(data.s.replace('%', '')) : data.s) / 100;
+      const l = (typeof data.l === 'string' ? Number(data.l.replace('%', '')) : data.l) / 100;
       this.valueChange.emit({
         data: {
           h: data.h || this.hsl.h,
-          s: Number(s || this.hsl.s),
-          l: Number(l || this.hsl.l),
+          s: s || this.hsl.s,
+          l: l || this.hsl.l,
           a: Math.round((data.a || this.hsl.a) * 100) / 100,
           source: 'hsl',
         },
