@@ -182,9 +182,6 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
 
   getColorString(color: Color) {
     switch (this.format) {
-      case 'hex':
-        this.color = color.hex;
-        break;
       case 'rgb':
         this.color = color.rgbString;
         break;
@@ -194,15 +191,9 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       case 'hsv':
         this.color = color.hsvString;
         break;
-      default: {
-        const msg = `The format '${this.format}' is not supported`;
-        if (isDevMode()) {
-          throw new Error(msg);
-        } else {
-          console.warn(msg);
-        }
+      default:
+        this.color = color.hex;
         break;
-      }
     }
     this.cdr.markForCheck();
   }
