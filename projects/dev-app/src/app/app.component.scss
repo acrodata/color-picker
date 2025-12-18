@@ -1,0 +1,22 @@
+main {
+  height: 100%;
+  max-width: 800px;
+  padding: 0 16px;
+  margin: 0 auto;
+  overflow: auto;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  h2 {
+    flex: 1;
+  }
+
+  a {
+    display: inline-flex;
+    color: inherit;
+  }
+}

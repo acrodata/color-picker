@@ -1,0 +1,38 @@
+<label>
+  <input type="radio" name="format" value="hex" [(ngModel)]="format" />
+  <span>hex</span>
+</label>
+<label>
+  <input type="radio" name="format" value="rgb" [(ngModel)]="format" />
+  <span>rgb</span>
+</label>
+<label>
+  <input type="radio" name="format" value="hsl" [(ngModel)]="format" />
+  <span>hsl</span>
+</label>
+<label>
+  <input type="radio" name="format" value="hsv" [(ngModel)]="format" />
+  <span>hsv</span>
+</label>
+
+<label>
+  <input type="checkbox" name="hideAlpha" [(ngModel)]="hideAlpha" />
+  <span>hideAlpha</span>
+</label>
+
+<color-picker
+  [hideAlpha]="hideAlpha"
+  [(format)]="format"
+  [(ngModel)]="color"
+  (ngModelChange)="log('ngModelChange', $event)"
+  (colorChange)="log('colorChange', $event)"
+  (valueChange)="log('valueChange', $event)"
+  (valueChanged)="log('valueChanged', $event)"
+/>
+<textarea [(ngModel)]="color"></textarea>
+
+<color-picker [(ngModel)]="color2" />
+<textarea [(ngModel)]="color2"></textarea>
+
+<color-picker [(color)]="color3" />
+<textarea [(ngModel)]="color3"></textarea>
