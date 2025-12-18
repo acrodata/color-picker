@@ -24,7 +24,7 @@
   transform: translate(-50%,
       calc((var(--cp-slider-thumb-height, 12px) - var(--cp-slider-height, 10px)) / -2));
   background-color: var(--cp-slider-thumb-background-color, #f2f2f2);
-  box-shadow: var(--cp-slider-thumb-shadow, 0 1px 4px 0 rgba(0, 0, 0, 0.32));
+  box-shadow: var(--cp-slider-thumb-shadow, 0 1px 4px 0 rgba(0, 0, 0, 0.32), 0 2px 8px 0 rgba(0, 0, 0, 0.16));
 }
 
 .color-hue-horizontal {
