@@ -14,9 +14,23 @@ header {
   h2 {
     flex: 1;
   }
+}
 
-  a {
-    display: inline-flex;
-    color: inherit;
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.04);
+  border: none;
+  border-radius: 50%;
+  color: inherit;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: rgba(0, 0, 0, 0.12);
   }
 }

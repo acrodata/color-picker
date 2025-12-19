@@ -1,0 +1,55 @@
+section {
+  --outline-color: light-dark(#b4b4b4, #4d4d4d);
+  --hover-outline-color: light-dark(#0d99ff, #0c8ce9);
+
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 240px;
+  margin: 0 auto;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+
+  input {
+    flex: 1;
+  }
+}
+
+button {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  background: none;
+  border-radius: 8px;
+  border: 1px solid var(--outline-color);
+  cursor: pointer;
+
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: currentColor;
+    border-radius: 3px;
+  }
+
+  &:hover,
+  &:focus {
+    border-color: var(--hover-outline-color);
+  }
+}
+
+input {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--outline-color);
+
+  &:hover,
+  &:focus {
+    border-color: var(--hover-outline-color);
+  }
+}

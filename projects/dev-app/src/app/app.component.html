@@ -1,9 +1,11 @@
 <main>
   <header>
-    <h2>Color picker</h2>
+    <h2>Color Picker</h2>
 
-    <button class="theme-btn" (click)="toggleTheme()">{{ lightTheme ? '☀️' : '🌙' }}</button>
-    <a href="https://github.com/acrodata/color-picker" target="_blank">
+    <button class="icon-btn theme-btn" (click)="toggleTheme()">
+      {{ lightTheme ? '☀️' : '🌙' }}
+    </button>
+    <a class="icon-btn" href="https://github.com/acrodata/color-picker" target="_blank">
       <svg viewBox="0 0 24 24" width="24" height="24">
         <path
           fill="currentColor"
