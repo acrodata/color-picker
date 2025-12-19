@@ -46,7 +46,6 @@ export class ColorInputField implements OnChanges {
 
   @Output() valueChange = new EventEmitter<{
     data: Record<string, number | string> | number | string;
-    $event: KeyboardEvent;
   }>();
 
   uniqueId = `color-input-${++nextUniqueId}`;
@@ -91,10 +90,9 @@ export class ColorInputField implements OnChanges {
       if (this.label) {
         this.valueChange.emit({
           data: { [this.label]: num + step },
-          $event: e,
         });
       } else {
-        this.valueChange.emit({ data: num + step, $event: e });
+        this.valueChange.emit({ data: num + step });
       }
 
       if (isPercentage) {
@@ -109,10 +107,9 @@ export class ColorInputField implements OnChanges {
       if (this.label) {
         this.valueChange.emit({
           data: { [this.label]: num - step },
-          $event: e,
         });
       } else {
-        this.valueChange.emit({ data: num - step, $event: e });
+        this.valueChange.emit({ data: num - step });
       }
 
       if (isPercentage) {
@@ -135,10 +132,9 @@ export class ColorInputField implements OnChanges {
     if (this.label) {
       this.valueChange.emit({
         data: { [this.label]: target.value },
-        $event: e,
       });
     } else {
-      this.valueChange.emit({ data: target.value, $event: e });
+      this.valueChange.emit({ data: target.value });
     }
   }
 }

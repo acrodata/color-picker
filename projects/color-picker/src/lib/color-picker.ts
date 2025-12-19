@@ -7,7 +7,6 @@ import {
   forwardRef,
   inject,
   Input,
-  isDevMode,
   OnChanges,
   OnDestroy,
   OnInit,
@@ -23,8 +22,8 @@ import { ColorHueSlider } from './color-hue-slider';
 import { ColorIconButton } from './color-icon-button';
 import { ColorInputFields } from './color-input-fields';
 import { ColorSaturationPicker } from './color-saturation-picker';
-import { Color, ColorEvent, ColorFormat, HSLA, HSVA, RGBA } from './interfaces';
-import { simpleCheckForValidColor, toState } from './utils';
+import { Color, ColorEvent, ColorFormat } from './interfaces';
+import { parseColor, simpleCheckForValidColor } from './utils';
 
 @Component({
   selector: 'color-picker',
@@ -77,15 +76,12 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   /** Whether the color-picker is disabled. */
   @Input({ transform: booleanAttribute }) disabled = false;
 
-  hsl!: HSLA;
-  hsv!: HSVA;
-  rgb!: RGBA;
-  hex = '';
-  oldHue = 0;
-  source = '';
-
   private valueChangeSub = Subscription.EMPTY;
   private valueChangedSub = new Subscription();
+
+  colorData!: Color;
+  oldHue = 0;
+  oldColor = '';
 
   EyeDropper = (window as any).EyeDropper;
   supportEyeDropper = !!this.EyeDropper;
@@ -96,8 +92,8 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     if (changes['format']) {
       this.getColorFormat();
     }
-    if (changes['color']) {
-      this.setState(toState(this.color, this.oldHue, this.hideAlpha));
+    if (changes['color'] && this.color !== this.oldColor) {
+      this.getColorData(this.color, this.oldHue);
     }
   }
 
@@ -113,7 +109,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
       )
       .subscribe();
 
-    this.setState(toState(this.color, 0, this.hideAlpha));
+    this.getColorData(this.color);
   }
 
   ngOnDestroy() {
@@ -125,7 +121,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     if (value) {
       this.color = value;
       this.getColorFormat();
-      this.setState(toState(this.color, this.oldHue, this.hideAlpha));
+      this.getColorData(this.color, this.oldHue);
     }
   }
 
@@ -148,23 +144,18 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     this.cdr.markForCheck();
   }
 
-  setState(data: Color) {
-    this.oldHue = data.oldHue;
-    this.hsl = data.hsl;
-    this.hsv = data.hsv;
-    this.rgb = data.rgb;
-    this.hex = data.hex;
-    this.source = data.source;
+  getColorData(data: any, oldHue = 0) {
+    this.colorData = parseColor(data, oldHue, this.hideAlpha);
+    this.oldHue = this.colorData.oldHue;
     this.cdr.markForCheck();
   }
 
-  handleChange(e: { data: any; $event: Event }) {
-    const { data, $event } = e;
+  handleChange(e: { data: any }) {
+    const { data } = e;
     const isValidColor = simpleCheckForValidColor(data);
     if (isValidColor) {
-      const color = toState(data, data.h || this.oldHue, this.hideAlpha);
-      this.setState(color);
-      this.valueChange.emit({ color, $event });
+      this.getColorData(data, data.h || this.oldHue);
+      this.valueChange.emit({ color: this.colorData });
     }
   }
 
@@ -195,6 +186,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
         this.color = color.hex;
         break;
     }
+    this.oldColor = this.color;
     this.cdr.markForCheck();
   }
 
@@ -206,7 +198,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     const eyeDropper = new this.EyeDropper();
     try {
       const result = await eyeDropper.open();
-      this.handleChange({ data: result.sRGBHex, $event: e });
+      this.handleChange({ data: result.sRGBHex });
     } catch (err) {
       console.warn(err);
     }

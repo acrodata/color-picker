@@ -8,7 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
-import { HSLA, HSVA, HSVAsource } from './interfaces';
+import { Color, HSLA, HSVA, HSVAsource } from './interfaces';
 
 @Component({
   selector: 'color-saturation-picker',
@@ -33,11 +33,12 @@ import { HSLA, HSVA, HSVAsource } from './interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorSaturationPicker implements OnChanges {
-  @Input() hsl!: HSLA;
+  @Input() color!: Color;
 
-  @Input() hsv!: HSVA;
+  @Output() change = new EventEmitter<{ data: HSVAsource }>();
 
-  @Output() change = new EventEmitter<{ data: HSVAsource; $event: PointerEvent }>();
+  hsl!: HSLA;
+  hsv!: HSVA;
 
   bgColor = '';
 
@@ -45,18 +46,21 @@ export class ColorSaturationPicker implements OnChanges {
   posY: number | null = null;
 
   ngOnChanges() {
+    this.hsl = this.color.hsl;
+    this.hsv = this.color.hsv;
+
     this.bgColor = `hsl(${this.hsl.h}, 100%, 50%)`;
     this.posX = this.hsv.s * 100;
     this.posY = 100 - this.hsv.v * 100;
   }
 
   handleChange(e: CoordinatesChangeEvent) {
-    const { top, left, containerHeight, containerWidth, $event } = e;
+    const { top, left, containerHeight, containerWidth } = e;
 
     const s = Math.max(0, Math.min(left, containerWidth)) / containerWidth;
     const v = 1 - Math.max(0, Math.min(top, containerHeight)) / containerHeight;
 
     const data: HSVAsource = { ...this.hsv, s, v, source: 'hsva' };
-    this.change.emit({ data, $event });
+    this.change.emit({ data });
   }
 }

@@ -11,7 +11,7 @@ import {
 import { TinyColor } from '@ctrl/tinycolor';
 import { ColorIconButton } from './color-icon-button';
 import { ColorInputField } from './color-input-field';
-import { ColorFormat, HSLA, RGBA } from './interfaces';
+import { Color, ColorFormat, HSLA, RGBA } from './interfaces';
 import { isValidHex } from './utils';
 
 @Component({
@@ -61,7 +61,7 @@ import { isValidHex } from './utils';
     </div>
 
     <color-icon-button>
-      <button type="button" (click)="toggleColorFormat($event)">
+      <button type="button" (click)="toggleColorFormat()">
         <svg viewBox="0 0 24 24">
           <path
             fill="currentColor"
@@ -79,24 +79,27 @@ import { isValidHex } from './utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorInputFields implements OnChanges {
+  @Input() color!: Color;
+
   @Input() format?: ColorFormat = 'hex';
 
   @Output() formatChange = new EventEmitter<ColorFormat>();
 
   @Input({ transform: booleanAttribute }) hideAlpha = false;
 
-  @Input() hsl!: HSLA;
-
-  @Input() rgb!: RGBA;
-
-  @Input() hex = '';
-
   @Output() valueChange = new EventEmitter<{
     data: Record<string, any>;
-    $event: KeyboardEvent | MouseEvent;
   }>();
 
+  hsl!: HSLA;
+  rgb!: RGBA;
+  hex = '';
+
   ngOnChanges(): void {
+    this.hsl = this.color.hsl;
+    this.rgb = this.color.rgb;
+    this.hex = this.color.hex;
+
     if (this.format == null) {
       this.format = 'hex';
     } else if (this.format === 'hsv') {
@@ -104,24 +107,21 @@ export class ColorInputFields implements OnChanges {
     }
   }
 
-  toggleColorFormat(e: MouseEvent) {
+  toggleColorFormat() {
     if (this.format === 'hex') {
       this.format = 'rgb';
       this.handleChange({
         data: { ...this.rgb, source: 'rgb' },
-        $event: e,
       });
     } else if (this.format === 'rgb') {
       this.format = 'hsl';
       this.handleChange({
         data: { ...this.hsl, s: this.hsl.s * 100, l: this.hsl.l * 100, source: 'hsl' },
-        $event: e,
       });
     } else if (this.format === 'hsl') {
       this.format = 'hex';
       this.handleChange({
         data: { hex: this.hex, source: 'hex' },
-        $event: e,
       });
     }
     this.formatChange.emit(this.format);
@@ -131,8 +131,8 @@ export class ColorInputFields implements OnChanges {
     return Math.round(value);
   }
 
-  handleChange(e: { data: any; $event: KeyboardEvent | MouseEvent }) {
-    const { data, $event } = e;
+  handleChange(e: { data: any }) {
+    const { data } = e;
     if (data.hex) {
       if (isValidHex(data.hex)) {
         const color = new TinyColor(data.hex);
@@ -141,7 +141,6 @@ export class ColorInputFields implements OnChanges {
             hex: this.hideAlpha ? color.toHex() : color.toHex8(),
             source: 'hex',
           },
-          $event,
         });
       }
     } else if (data.r || data.g || data.b) {
@@ -153,7 +152,6 @@ export class ColorInputFields implements OnChanges {
           a: Math.round((data.a || this.rgb.a) * 100) / 100,
           source: 'rgb',
         },
-        $event,
       });
     } else if (data.h || data.s || data.l) {
       const s = (typeof data.s === 'string' ? Number(data.s.replace('%', '')) : data.s) / 100;
@@ -166,7 +164,6 @@ export class ColorInputFields implements OnChanges {
           a: Math.round((data.a || this.hsl.a) * 100) / 100,
           source: 'hsl',
         },
-        $event,
       });
     } else if (data.a) {
       let a = Math.max(0, Math.min(1, data.a));
@@ -182,7 +179,6 @@ export class ColorInputFields implements OnChanges {
           a: Math.round(a * 100) / 100,
           source: 'rgb',
         },
-        $event,
       });
     }
   }

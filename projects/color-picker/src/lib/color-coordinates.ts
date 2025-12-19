@@ -9,7 +9,6 @@ export interface CoordinatesChangeEvent {
   left: number;
   containerWidth: number;
   containerHeight: number;
-  $event: PointerEvent;
 }
 
 @Directive({
@@ -72,7 +71,6 @@ export class ColorCoordinates implements OnInit, OnDestroy {
       left,
       containerWidth,
       containerHeight,
-      $event: e,
     });
   }
 }

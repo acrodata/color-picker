@@ -57,5 +57,4 @@ export type ColorFormat = 'hex' | 'rgb' | 'hsl' | 'hsv';
 
 export interface ColorEvent {
   color: Color;
-  $event: Event;
 }

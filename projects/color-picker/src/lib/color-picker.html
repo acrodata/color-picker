@@ -1,4 +1,4 @@
-<color-saturation-picker [hsl]="hsl" [hsv]="hsv" (change)="handleChange($event)" />
+<color-saturation-picker [color]="colorData" (change)="handleChange($event)" />
 
 <div class="color-picker-controls">
   @if (supportEyeDropper) {
@@ -33,21 +33,19 @@
   </button>
 
   <div class="color-hue-alpha">
-    <color-hue-slider [hsl]="hsl" (change)="handleChange($event)" />
+    <color-hue-slider [color]="colorData" (change)="handleChange($event)" />
 
     @if (!hideAlpha) {
-      <color-alpha-slider [hsl]="hsl" [rgb]="rgb" (change)="handleChange($event)" />
+      <color-alpha-slider [color]="colorData" (change)="handleChange($event)" />
     }
   </div>
 </div>
 
 <div class="color-picker-controls">
   <color-input-fields
+    [color]="colorData"
     [hideAlpha]="hideAlpha"
     [(format)]="format"
-    [hsl]="hsl"
-    [rgb]="rgb"
-    [hex]="hex"
     (valueChange)="handleChange($event)"
     (formatChange)="handleFormatChange()"
   />

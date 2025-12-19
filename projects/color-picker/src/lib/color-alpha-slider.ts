@@ -8,7 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
-import { HSLA, HSLAsource, RGBA } from './interfaces';
+import { Color, HSLA, HSLAsource, RGBA } from './interfaces';
 
 @Component({
   selector: 'color-alpha-slider',
@@ -34,13 +34,14 @@ import { HSLA, HSLAsource, RGBA } from './interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorAlphaSlider implements OnChanges {
-  @Input() hsl!: HSLA;
-
-  @Input() rgb!: RGBA;
+  @Input() color!: Color;
 
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
 
-  @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
+  @Output() change = new EventEmitter<{ data: HSLAsource }>();
+
+  hsl!: HSLA;
+  rgb!: RGBA;
 
   gradient = '';
 
@@ -48,6 +49,9 @@ export class ColorAlphaSlider implements OnChanges {
   posY: number | null = null;
 
   ngOnChanges() {
+    this.hsl = this.color.hsl;
+    this.rgb = this.color.rgb;
+
     const { r, g, b, a } = this.rgb;
     if (this.direction === 'vertical') {
       this.gradient = `linear-gradient(to bottom, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
@@ -61,7 +65,7 @@ export class ColorAlphaSlider implements OnChanges {
   }
 
   handleChange(e: CoordinatesChangeEvent) {
-    const { top, left, containerHeight, containerWidth, $event } = e;
+    const { top, left, containerHeight, containerWidth } = e;
 
     const isVertical = this.direction === 'vertical';
     const pos = isVertical ? top : left;
@@ -72,7 +76,7 @@ export class ColorAlphaSlider implements OnChanges {
 
     if (this.hsl.a !== a) {
       const data: HSLAsource = { ...this.hsl, a, source: 'rgb' };
-      this.change.emit({ data, $event });
+      this.change.emit({ data });
     }
   }
 }

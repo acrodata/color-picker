@@ -8,7 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ColorCoordinates, CoordinatesChangeEvent } from './color-coordinates';
-import { HSLA, HSLAsource } from './interfaces';
+import { Color, HSLA, HSLAsource } from './interfaces';
 
 @Component({
   selector: 'color-hue-slider',
@@ -32,16 +32,20 @@ import { HSLA, HSLAsource } from './interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorHueSlider implements OnChanges {
-  @Input() hsl!: HSLA;
+  @Input() color!: Color;
 
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
 
-  @Output() change = new EventEmitter<{ data: HSLAsource; $event: PointerEvent }>();
+  @Output() change = new EventEmitter<{ data: HSLAsource }>();
+
+  hsl!: HSLA;
 
   posX: number | null = null;
   posY: number | null = null;
 
   ngOnChanges(): void {
+    this.hsl = this.color.hsl;
+
     if (this.direction === 'vertical') {
       this.posY = 100 - (this.hsl.h * 100) / 360;
     } else {
@@ -50,7 +54,7 @@ export class ColorHueSlider implements OnChanges {
   }
 
   handleChange(e: CoordinatesChangeEvent) {
-    const { top, left, containerHeight, containerWidth, $event } = e;
+    const { top, left, containerHeight, containerWidth } = e;
 
     const isVertical = this.direction === 'vertical';
     const pos = isVertical ? top : left;
@@ -62,7 +66,7 @@ export class ColorHueSlider implements OnChanges {
 
     if (this.hsl.h !== h) {
       const data: HSLAsource = { ...this.hsl, h, source: 'rgb' };
-      this.change.emit({ data, $event });
+      this.change.emit({ data });
     }
   }
 }

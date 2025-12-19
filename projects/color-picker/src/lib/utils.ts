@@ -23,7 +23,7 @@ export function simpleCheckForValidColor(data: any) {
   return checked === passed ? data : false;
 }
 
-export function toState(data: any, oldHue = 0, hideAlpha = false): Color {
+export function parseColor(data: any, oldHue = 0, hideAlpha = false): Color {
   const color = data.hex ? new TinyColor(data.hex) : new TinyColor(data);
   if (hideAlpha) {
     color.setAlpha(1);
