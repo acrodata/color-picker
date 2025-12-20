@@ -100,7 +100,7 @@ export class ColorInputFields implements OnChanges {
     this.rgb = this.color.rgb;
     this.hex = this.color.hex;
 
-    if (this.format == null) {
+    if (!this.format) {
       this.format = 'hex';
     } else if (this.format === 'hsv') {
       this.format = 'hsl';

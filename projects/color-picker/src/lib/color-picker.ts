@@ -89,7 +89,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   isCopied = false;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['format']) {
+    if (changes['format'] || changes['color']) {
       this.getColorFormat();
     }
     if (changes['color'] && this.color !== this.oldColor) {
@@ -160,7 +160,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   }
 
   getColorFormat() {
-    if (this.format == null) {
+    if (!this.format) {
       const color = new TinyColor(this.color);
       if (color.format === 'rgb' || color.format === 'hsl' || color.format === 'hsv') {
         this.format = color.format;
