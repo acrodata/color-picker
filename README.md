@@ -3,6 +3,10 @@
 [![npm](https://img.shields.io/npm/v/@acrodata/color-picker.svg)](https://www.npmjs.com/package/@acrodata/color-picker)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/acrodata/color-picker/blob/main/LICENSE)
 
+<div align="center">
+  <img src="https://repository-images.githubusercontent.com/1089636548/80fd40ee-eba2-4cea-aac8-c2344010a789" width="640" alt="color-picker" />
+</div>
+
 Another beautiful color picker
 
 #### Quick links
@@ -40,10 +44,49 @@ export class YourAppComponent {
 
 | Name           | Type                      | Default     | Description                                       |
 | -------------- | ------------------------- | ----------- | ------------------------------------------------- |
-| [format]       | ColorFormat               | `undefined` | The output format of the color picker.            |
 | [color]        | string                    | `#000`      | The initial color string.                         |
+| [format]       | ColorFormat               | `undefined` | The output format of the color picker.            |
 | [disableAlpha] | boolean                   | `false`     | Whether to hide the alpha channel.                |
-| (formatChange) | EventEmitter<ColorFormat> | `-`         | Event emitted when the color format is changed.   |
 | (colorChange)  | EventEmitter<string>      | `-`         | Event emitted when the color string is changed.   |
+| (formatChange) | EventEmitter<ColorFormat> | `-`         | Event emitted when the color format is changed.   |
 | (valueChange)  | EventEmitter<ColorEvent>  | `-`         | Event emitted when the color changes.             |
 | (valueChanged) | EventEmitter<ColorEvent>  | `-`         | Event emitted when the color change is finalized. |
+
+## CSS Variables
+
+```css
+--cp-container-width
+--cp-container-shape
+--cp-container-padding
+--cp-container-margin
+--cp-container-elevation-shadow
+--cp-container-background-color
+
+--cp-input-shape
+--cp-input-background-color
+--cp-input-outline-color
+--cp-input-hover-outline-color
+--cp-input-focus-outline-color
+--cp-input-text-font
+
+--cp-icon-button-shape
+--cp-icon-button-text-color
+--cp-icon-button-background-color
+--cp-icon-button-hover-background-color
+--cp-icon-button-active-background-color
+--cp-icon-button-focus-background-color
+--cp-icon-button-focus-outline-color
+
+--cp-slider-width
+--cp-slider-height
+--cp-slider-shape
+--cp-slider-thumb-width
+--cp-slider-thumb-height
+--cp-slider-thumb-shape
+--cp-slider-thumb-background-color
+--cp-slider-thumb-shadow
+```
+
+## License
+
+MIT
