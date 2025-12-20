@@ -1,11 +1,33 @@
 {
-  "name": "color-picker",
-  "version": "0.0.1",
+  "name": "@acrodata/color-picker",
+  "version": "1.0.0",
+  "description": "Another beautiful color picker.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "nzbin<nzb329@163.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/acrodata/color-picker.git"
+  },
+  "homepage": "https://acrodata.github.io/color-picker/",
+  "keywords": [
+    "angular",
+    "typescript",
+    "color-picker",
+    "colorpicker",
+    "eyedropper",
+    "ngx-color-picker",
+    "ngx-color"
+  ],
   "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+    "@angular/common": ">=17.0.0",
+    "@angular/core": ">=17.0.0",
+    "@angular/forms": ">=17.0.0"
   },
   "dependencies": {
+    "@ctrl/tinycolor": "^4.2.0",
     "tslib": "^2.3.0"
   },
   "sideEffects": false
