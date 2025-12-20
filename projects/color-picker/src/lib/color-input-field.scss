@@ -8,6 +8,7 @@
     height: 24px;
     border: none;
     border-radius: var(--cp-input-shape, 4px);
+    background-color: var(--cp-input-background-color, transparent);
     outline: 1px solid var(--cp-input-outline-color, #e6e6e6);
     font-family: var(--cp-input-text-font, monospace);
     font-size: inherit;
