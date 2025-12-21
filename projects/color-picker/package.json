@@ -1,6 +1,6 @@
 {
   "name": "@acrodata/color-picker",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Another beautiful color picker.",
   "publishConfig": {
     "access": "public"
