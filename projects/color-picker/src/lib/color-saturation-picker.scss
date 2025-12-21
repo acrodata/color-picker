@@ -30,5 +30,5 @@
   outline: 1px solid #fff;
   outline-offset: -1px;
   transform: translate(-50%, -50%);
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.32);
+  box-shadow: var(--cp-saturation-picker-thumb-shadow, 0 2px 6px 0 rgba(0, 0, 0, 0.32));
 }

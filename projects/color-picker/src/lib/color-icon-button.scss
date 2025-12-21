@@ -7,7 +7,7 @@
     width: 100%;
     height: 100%;
     padding: 2px;
-    color: var(--cp-icon-button-text-color, initial);
+    color: var(--cp-icon-button-text-color, inherit);
     background-color: var(--cp-icon-button-background-color, transparent);
     border: none;
     border-radius: var(--cp-icon-button-shape, 4px);
