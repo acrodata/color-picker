@@ -61,6 +61,7 @@ export class YourAppComponent {
 --cp-container-margin
 --cp-container-elevation-shadow
 --cp-container-background-color
+--cp-container-text-color
 
 --cp-input-shape
 --cp-input-background-color
@@ -76,6 +77,11 @@ export class YourAppComponent {
 --cp-icon-button-active-background-color
 --cp-icon-button-focus-background-color
 --cp-icon-button-focus-outline-color
+
+--cp-saturation-picker-shape
+--cp-saturation-picker-thumb-size
+--cp-saturation-picker-thumb-shape
+--cp-saturation-picker-thumb-shadow
 
 --cp-slider-width
 --cp-slider-height
