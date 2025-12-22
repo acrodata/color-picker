@@ -42,15 +42,14 @@ export class YourAppComponent {
 
 ## API
 
-| Name           | Type                      | Default     | Description                                       |
-| -------------- | ------------------------- | ----------- | ------------------------------------------------- |
-| [color]        | string                    | `#000`      | The initial color string.                         |
-| [format]       | ColorFormat               | `undefined` | The output format of the color picker.            |
-| [disableAlpha] | boolean                   | `false`     | Whether to hide the alpha channel.                |
-| (colorChange)  | EventEmitter<string>      | `-`         | Event emitted when the color string is changed.   |
-| (formatChange) | EventEmitter<ColorFormat> | `-`         | Event emitted when the color format is changed.   |
-| (valueChange)  | EventEmitter<ColorEvent>  | `-`         | Event emitted when the color changes.             |
-| (valueChanged) | EventEmitter<ColorEvent>  | `-`         | Event emitted when the color change is finalized. |
+| Name           | Type                        | Default     | Description                                     |
+| -------------- | --------------------------- | ----------- | ----------------------------------------------- |
+| [color]        | string                      | `#000`      | The initial color string.                       |
+| [format]       | ColorFormat                 | `undefined` | The output format of the color picker.          |
+| [disableAlpha] | boolean                     | `false`     | Whether to hide the alpha channel.              |
+| (colorChange)  | EventEmitter\<string\>      | `-`         | Event emitted when the color string changes.    |
+| (valueChange)  | EventEmitter\<ColorEvent\>  | `-`         | Event emitted when the color value changes.     |
+| (formatChange) | EventEmitter\<ColorFormat\> | `-`         | Event emitted when the color format is changed. |
 
 ## CSS Variables
 
