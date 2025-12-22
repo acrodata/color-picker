@@ -8,7 +8,6 @@ import {
   inject,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
@@ -16,7 +15,6 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TinyColor } from '@ctrl/tinycolor';
-import { debounceTime, Subscription, tap } from 'rxjs';
 import { ColorAlphaSlider } from './color-alpha-slider';
 import { ColorHueSlider } from './color-hue-slider';
 import { ColorIconButton } from './color-icon-button';
@@ -49,7 +47,7 @@ import { parseColor, simpleCheckForValidColor } from './utils';
     },
   ],
 })
-export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
+export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
   private cdr = inject(ChangeDetectorRef);
 
   /** The output format of the color picker. */
@@ -61,14 +59,11 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   /** The initial color string. */
   @Input() color = '#000';
 
-  /** Event emitted when the color string is changed. */
+  /** Event emitted when the color string changes. */
   @Output() colorChange = new EventEmitter<string>();
 
-  /** Event emitted when the color changes. */
+  /** Event emitted when the color value changes. */
   @Output() valueChange = new EventEmitter<ColorEvent>();
-
-  /** Event emitted when the color change is finalized. */
-  @Output() valueChanged = new EventEmitter<ColorEvent>();
 
   /** Whether to hide the alpha channel. */
   @Input({ transform: booleanAttribute }) hideAlpha = false;
@@ -76,8 +71,8 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   /** Whether the color-picker is disabled. */
   @Input({ transform: booleanAttribute }) disabled = false;
 
-  private valueChangeSub = Subscription.EMPTY;
-  private valueChangedSub = new Subscription();
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
 
   colorData!: Color;
   oldHue = 0;
@@ -98,23 +93,7 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   }
 
   ngOnInit() {
-    this.valueChangeSub = this.valueChange
-      .pipe(
-        debounceTime(100),
-        tap(e => {
-          this.getColorString(e.color);
-          this.valueChanged.emit(e);
-          this.colorChange.emit(this.color);
-        })
-      )
-      .subscribe();
-
     this.getColorData(this.color);
-  }
-
-  ngOnDestroy() {
-    this.valueChangeSub.unsubscribe();
-    this.valueChangedSub.unsubscribe();
   }
 
   writeValue(value: any): void {
@@ -126,18 +105,12 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
   }
 
   registerOnChange(fn: (color: string) => void): void {
-    this.valueChangedSub.add(
-      this.valueChanged
-        .pipe(
-          tap(e => {
-            fn(this.color);
-          })
-        )
-        .subscribe()
-    );
+    this.onChange = fn;
   }
 
-  registerOnTouched(fn: () => void): void {}
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
@@ -155,6 +128,9 @@ export class ColorPicker implements OnInit, OnChanges, OnDestroy, ControlValueAc
     const isValidColor = simpleCheckForValidColor(data);
     if (isValidColor) {
       this.getColorData(data, data.h || this.oldHue);
+      this.getColorString(this.colorData);
+      this.onChange(this.color);
+      this.colorChange.emit(this.color);
       this.valueChange.emit({ color: this.colorData });
     }
   }

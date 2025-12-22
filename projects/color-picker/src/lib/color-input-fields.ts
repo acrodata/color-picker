@@ -107,28 +107,26 @@ export class ColorInputFields implements OnChanges {
     }
   }
 
-  toggleColorFormat() {
-    if (this.format === 'hex') {
-      this.format = 'rgb';
-      this.handleChange({
-        data: { ...this.rgb, source: 'rgb' },
-      });
-    } else if (this.format === 'rgb') {
-      this.format = 'hsl';
-      this.handleChange({
-        data: { ...this.hsl, s: this.hsl.s * 100, l: this.hsl.l * 100, source: 'hsl' },
-      });
-    } else if (this.format === 'hsl') {
-      this.format = 'hex';
-      this.handleChange({
-        data: { hex: this.hex, source: 'hex' },
-      });
-    }
-    this.formatChange.emit(this.format);
-  }
-
   round(value: number) {
     return Math.round(value);
+  }
+
+  toggleColorFormat() {
+    let format: ColorFormat | undefined;
+    let data = {};
+    if (this.format === 'hex') {
+      format = 'rgb';
+      data = { ...this.rgb, source: 'rgb' };
+    } else if (this.format === 'rgb') {
+      format = 'hsl';
+      data = { ...this.hsl, s: this.hsl.s * 100, l: this.hsl.l * 100, source: 'hsl' };
+    } else if (this.format === 'hsl') {
+      format = 'hex';
+      data = { hex: this.hex, source: 'hex' };
+    }
+    this.format = format;
+    this.formatChange.emit(format);
+    this.handleChange({ data });
   }
 
   handleChange(e: { data: any }) {
