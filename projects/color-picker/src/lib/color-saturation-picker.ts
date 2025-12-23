@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
   Output,
@@ -17,22 +19,29 @@ import { Color, HSLA, HSVA, HSVAsource } from './interfaces';
     <div
       class="color-saturation-picker-content"
       colorCoordinates
+      [percentX]="posX"
+      [percentY]="posY"
       (coordinatesChange)="handleChange($event)"
       [style.background-color]="bgColor"
     >
       <div class="color-saturation-picker-pointer" [style.left.%]="posX" [style.top.%]="posY">
-        <div class="color-saturation-picker-thumb"></div>
+        <button class="color-saturation-picker-thumb">
+          <!--  -->
+        </button>
       </div>
     </div>
   `,
   styleUrl: './color-saturation-picker.scss',
   host: {
-    class: 'color-saturation-picker',
+    'class': 'color-saturation-picker',
+    '(scroll)': 'onScroll()',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorSaturationPicker implements OnChanges {
+  private el = inject<ElementRef<HTMLElement>>(ElementRef);
+
   @Input() color!: Color;
 
   @Output() change = new EventEmitter<{ data: HSVAsource }>();
@@ -42,8 +51,8 @@ export class ColorSaturationPicker implements OnChanges {
 
   bgColor = '';
 
-  posX: number | null = null;
-  posY: number | null = null;
+  posX = 0;
+  posY = 0;
 
   ngOnChanges() {
     this.hsl = this.color.hsl;
@@ -62,5 +71,14 @@ export class ColorSaturationPicker implements OnChanges {
 
     const data: HSVAsource = { ...this.hsv, s, v, source: 'hsva' };
     this.change.emit({ data });
+  }
+
+  // Fix the Focus-induced Scroll issue
+  onScroll() {
+    const el = this.el.nativeElement;
+    if (el.scrollTop !== 0 || el.scrollLeft !== 0) {
+      el.scrollTop = 0;
+      el.scrollLeft = 0;
+    }
   }
 }

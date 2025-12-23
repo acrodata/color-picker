@@ -16,11 +16,15 @@ import { Color, HSLA, HSLAsource } from './interfaces';
   template: `
     <div
       colorCoordinates
+      [percentX]="posX"
+      [percentY]="posY"
       (coordinatesChange)="handleChange($event)"
       class="color-hue-slider-track color-hue-{{ direction }}"
     >
       <div class="color-hue-slider-pointer" [style.left.%]="posX" [style.top.%]="posY">
-        <div class="color-hue-slider-thumb"></div>
+        <button class="color-hue-slider-thumb">
+          <!--  -->
+        </button>
       </div>
     </div>
   `,
@@ -40,15 +44,17 @@ export class ColorHueSlider implements OnChanges {
 
   hsl!: HSLA;
 
-  posX: number | null = null;
-  posY: number | null = null;
+  posX?: number | null;
+  posY?: number | null;
 
   ngOnChanges(): void {
     this.hsl = this.color.hsl;
 
     if (this.direction === 'vertical') {
+      this.posX = null;
       this.posY = 100 - (this.hsl.h * 100) / 360;
     } else {
+      this.posY = null;
       this.posX = (this.hsl.h * 100) / 360;
     }
   }

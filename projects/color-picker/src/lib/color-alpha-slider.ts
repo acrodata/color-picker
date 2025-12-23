@@ -16,13 +16,17 @@ import { Color, HSLA, HSLAsource, RGBA } from './interfaces';
   template: `
     <div
       colorCoordinates
+      [percentX]="posX"
+      [percentY]="posY"
       (coordinatesChange)="handleChange($event)"
       class="color-alpha-slider-track color-alpha-{{ direction }}"
     >
       <div class="color-alpha-gradient" [style.background]="gradient"></div>
 
       <div class="color-alpha-slider-pointer" [style.left.%]="posX" [style.top.%]="posY">
-        <div class="color-alpha-slider-thumb"></div>
+        <button class="color-alpha-slider-thumb">
+          <!--  -->
+        </button>
       </div>
     </div>
   `,
@@ -45,8 +49,8 @@ export class ColorAlphaSlider implements OnChanges {
 
   gradient = '';
 
-  posX: number | null = null;
-  posY: number | null = null;
+  posX?: number | null;
+  posY?: number | null;
 
   ngOnChanges() {
     this.hsl = this.color.hsl;
