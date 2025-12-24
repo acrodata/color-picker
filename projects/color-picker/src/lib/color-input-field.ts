@@ -8,6 +8,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
+import { ColorFieldValue } from './interfaces';
 
 let nextUniqueId = 0;
 
@@ -44,9 +45,7 @@ export class ColorInputField implements OnChanges {
 
   @Input() value: string | number = '';
 
-  @Output() valueChange = new EventEmitter<{
-    data: Record<string, number | string> | number | string;
-  }>();
+  @Output() valueChange = new EventEmitter<ColorFieldValue>();
 
   uniqueId = `color-input-${++nextUniqueId}`;
 
@@ -75,24 +74,21 @@ export class ColorInputField implements OnChanges {
   handleKeydown(e: KeyboardEvent) {
     // In case `e.target.value` is a percentage remove the `%` character
     // and update accordingly with a percentage
-    // https://github.com/casesandberg/react-color/issues/383
     const target = e.target as HTMLInputElement;
-    const stringValue = String(target.value);
-    const isPercentage = stringValue.indexOf('%') > -1;
-    const num = Number(stringValue.replace(/%/g, ''));
+    const inputValue = String(target.value);
+    const isPercentage = inputValue.indexOf('%') > -1;
+    const num = Number(inputValue.replace(/%/g, ''));
     if (isNaN(num)) {
       return;
     }
+
     const step = this.step || 1;
 
-    // Up
-    if (e.keyCode === 38) {
+    if (e.key === 'ArrowUp') {
       if (this.label) {
-        this.valueChange.emit({
-          data: { [this.label]: num + step },
-        });
+        this.valueChange.emit({ [this.label]: num + step });
       } else {
-        this.valueChange.emit({ data: num + step });
+        this.valueChange.emit(num + step);
       }
 
       if (isPercentage) {
@@ -102,14 +98,11 @@ export class ColorInputField implements OnChanges {
       }
     }
 
-    // Down
-    if (e.keyCode === 40) {
+    if (e.key === 'ArrowDown') {
       if (this.label) {
-        this.valueChange.emit({
-          data: { [this.label]: num - step },
-        });
+        this.valueChange.emit({ [this.label]: num - step });
       } else {
-        this.valueChange.emit({ data: num - step });
+        this.valueChange.emit(num - step);
       }
 
       if (isPercentage) {
@@ -122,7 +115,7 @@ export class ColorInputField implements OnChanges {
 
   handleKeyup(e: KeyboardEvent) {
     const target = e.target as HTMLInputElement;
-    if (e.keyCode === 40 || e.keyCode === 38) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       return;
     }
     if (`${this.currentValue}` === target.value) {
@@ -130,11 +123,9 @@ export class ColorInputField implements OnChanges {
     }
 
     if (this.label) {
-      this.valueChange.emit({
-        data: { [this.label]: target.value },
-      });
+      this.valueChange.emit({ [this.label]: target.value });
     } else {
-      this.valueChange.emit({ data: target.value });
+      this.valueChange.emit(target.value);
     }
   }
 }

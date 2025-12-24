@@ -44,7 +44,7 @@ export class ColorSaturationPicker implements OnChanges {
 
   @Input() color!: Color;
 
-  @Output() change = new EventEmitter<{ data: HSVAsource }>();
+  @Output() change = new EventEmitter<HSVAsource>();
 
   hsl!: HSLA;
   hsv!: HSVA;
@@ -69,8 +69,7 @@ export class ColorSaturationPicker implements OnChanges {
     const s = Math.max(0, Math.min(left, containerWidth)) / containerWidth;
     const v = 1 - Math.max(0, Math.min(top, containerHeight)) / containerHeight;
 
-    const data: HSVAsource = { ...this.hsv, s, v, source: 'hsva' };
-    this.change.emit({ data });
+    this.change.emit({ ...this.hsv, s, v, source: 'hsva' });
   }
 
   // Fix the Focus-induced Scroll issue

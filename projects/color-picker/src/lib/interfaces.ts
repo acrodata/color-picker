@@ -36,6 +36,17 @@ export interface HSLAsource extends HSLA {
   source: string;
 }
 
+export interface RGBAsource extends RGBA {
+  source: string;
+}
+
+export interface HEXsource {
+  hex: string;
+  source: string;
+}
+
+export type ColorSource = HSVAsource | HSLAsource | RGBAsource | HEXsource;
+
 export interface Color {
   hsl: HSLA;
   hslString: string;
@@ -48,13 +59,22 @@ export interface Color {
   source: string;
 }
 
-export interface Shape {
-  color: string;
-  title: string;
-}
-
 export type ColorFormat = 'hex' | 'rgb' | 'hsl' | 'hsv';
 
-export interface ColorEvent {
+export interface ColorChangeEvent {
+  value: string;
   color: Color;
 }
+
+export interface ColorFields {
+  hex: string;
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+  h: number;
+  s: number | string;
+  l: number | string;
+}
+
+export type ColorFieldValue = Partial<ColorFields> | number | string;

@@ -20,7 +20,7 @@ import { ColorHueSlider } from './color-hue-slider';
 import { ColorIconButton } from './color-icon-button';
 import { ColorInputFields } from './color-input-fields';
 import { ColorSaturationPicker } from './color-saturation-picker';
-import { Color, ColorEvent, ColorFormat } from './interfaces';
+import { Color, ColorChangeEvent, ColorFormat, ColorSource, HSLA } from './interfaces';
 import { parseColor, simpleCheckForValidColor } from './utils';
 
 @Component({
@@ -63,7 +63,7 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
   @Output() colorChange = new EventEmitter<string>();
 
   /** Event emitted when the color value changes. */
-  @Output() valueChange = new EventEmitter<ColorEvent>();
+  @Output() valueChange = new EventEmitter<ColorChangeEvent>();
 
   /** Whether to hide the alpha channel. */
   @Input({ transform: booleanAttribute }) hideAlpha = false;
@@ -123,15 +123,14 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
     this.cdr.markForCheck();
   }
 
-  handleChange(e: { data: any }) {
-    const { data } = e;
-    const isValidColor = simpleCheckForValidColor(data);
+  handleChange(e: ColorSource) {
+    const isValidColor = simpleCheckForValidColor(e);
     if (isValidColor) {
-      this.getColorData(data, data.h || this.oldHue);
+      this.getColorData(e, (e as HSLA).h || this.oldHue);
       this.getColorString(this.colorData);
       this.onChange(this.color);
       this.colorChange.emit(this.color);
-      this.valueChange.emit({ color: this.colorData });
+      this.valueChange.emit({ value: this.color, color: this.colorData });
     }
   }
 
@@ -174,7 +173,7 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
     const eyeDropper = new this.EyeDropper();
     try {
       const result = await eyeDropper.open();
-      this.handleChange({ data: result.sRGBHex });
+      this.handleChange({ hex: result.sRGBHex, source: 'rgb' });
     } catch (err) {
       console.warn(err);
     }

@@ -43,7 +43,7 @@ export class ColorAlphaSlider implements OnChanges {
 
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
 
-  @Output() change = new EventEmitter<{ data: HSLAsource }>();
+  @Output() change = new EventEmitter<HSLAsource>();
 
   hsl!: HSLA;
   rgb!: RGBA;
@@ -81,8 +81,7 @@ export class ColorAlphaSlider implements OnChanges {
     const a = Math.round(alpha * 100) / 100;
 
     if (this.hsl.a !== a) {
-      const data: HSLAsource = { ...this.hsl, a, source: 'rgb' };
-      this.change.emit({ data });
+      this.change.emit({ ...this.hsl, a, source: 'rgb' });
     }
   }
 }

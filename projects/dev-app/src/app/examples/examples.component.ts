@@ -4,6 +4,7 @@ import {
   ColorHueSlider,
   ColorPicker,
   ColorSaturationPicker,
+  ColorSource,
   parseColor,
 } from '@acrodata/color-picker';
 import { Component } from '@angular/core';
@@ -29,7 +30,7 @@ export class ExamplesComponent {
   }
 
   colorObj = parseColor(this.color);
-  onColorChange(e: { data: any }) {
-    this.colorObj = parseColor(e.data);
+  onColorChange(e: ColorSource) {
+    this.colorObj = parseColor(e);
   }
 }

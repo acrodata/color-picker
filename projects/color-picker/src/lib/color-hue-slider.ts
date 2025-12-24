@@ -42,7 +42,7 @@ export class ColorHueSlider implements OnChanges {
 
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
 
-  @Output() change = new EventEmitter<{ data: HSLAsource }>();
+  @Output() change = new EventEmitter<HSLAsource>();
 
   hsl!: HSLA;
 
@@ -73,8 +73,7 @@ export class ColorHueSlider implements OnChanges {
     const h = hue >= 360 ? 359 : hue;
 
     if (this.hsl.h !== h) {
-      const data: HSLAsource = { ...this.hsl, h, source: 'rgb' };
-      this.change.emit({ data });
+      this.change.emit({ ...this.hsl, h, source: 'rgb' });
     }
   }
 }

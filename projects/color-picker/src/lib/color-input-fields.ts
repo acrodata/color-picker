@@ -11,7 +11,7 @@ import {
 import { TinyColor } from '@ctrl/tinycolor';
 import { ColorIconButton } from './color-icon-button';
 import { ColorInputField } from './color-input-field';
-import { Color, ColorFormat, HSLA, RGBA } from './interfaces';
+import { Color, ColorFieldValue, ColorFormat, ColorSource, HSLA, RGBA } from './interfaces';
 import { isValidHex } from './utils';
 
 @Component({
@@ -87,9 +87,7 @@ export class ColorInputFields implements OnChanges {
 
   @Input({ transform: booleanAttribute }) hideAlpha = false;
 
-  @Output() valueChange = new EventEmitter<{
-    data: Record<string, any>;
-  }>();
+  @Output() valueChange = new EventEmitter<ColorSource>();
 
   hsl!: HSLA;
   rgb!: RGBA;
@@ -113,70 +111,64 @@ export class ColorInputFields implements OnChanges {
 
   toggleColorFormat() {
     let format: ColorFormat | undefined;
-    let data = {};
+    let fieldVal: ColorFieldValue = {};
     if (this.format === 'hex') {
       format = 'rgb';
-      data = { ...this.rgb, source: 'rgb' };
+      fieldVal = { ...this.rgb };
     } else if (this.format === 'rgb') {
       format = 'hsl';
-      data = { ...this.hsl, s: this.hsl.s * 100, l: this.hsl.l * 100, source: 'hsl' };
+      fieldVal = { ...this.hsl, s: this.hsl.s * 100, l: this.hsl.l * 100 };
     } else if (this.format === 'hsl') {
       format = 'hex';
-      data = { hex: this.hex, source: 'hex' };
+      fieldVal = { hex: this.hex };
     }
     this.format = format;
     this.formatChange.emit(format);
-    this.handleChange({ data });
+    this.handleChange(fieldVal);
   }
 
-  handleChange(e: { data: any }) {
-    const { data } = e;
-    if (data.hex) {
-      if (isValidHex(data.hex)) {
-        const color = new TinyColor(data.hex);
+  handleChange(e: ColorFieldValue) {
+    if (typeof e === 'string' || typeof e === 'number') {
+      return;
+    }
+    if (e.hex) {
+      if (isValidHex(e.hex)) {
+        const color = new TinyColor(e.hex);
         this.valueChange.emit({
-          data: {
-            hex: this.hideAlpha ? color.toHex() : color.toHex8(),
-            source: 'hex',
-          },
+          hex: this.hideAlpha ? color.toHex() : color.toHex8(),
+          source: 'hex',
         });
       }
-    } else if (data.r || data.g || data.b) {
+    } else if (e.r || e.g || e.b) {
       this.valueChange.emit({
-        data: {
-          r: data.r || this.rgb.r,
-          g: data.g || this.rgb.g,
-          b: data.b || this.rgb.b,
-          a: Math.round((data.a || this.rgb.a) * 100) / 100,
-          source: 'rgb',
-        },
+        r: e.r || this.rgb.r,
+        g: e.g || this.rgb.g,
+        b: e.b || this.rgb.b,
+        a: Math.round((e.a || this.rgb.a) * 100) / 100,
+        source: 'rgb',
       });
-    } else if (data.h || data.s || data.l) {
-      const s = (typeof data.s === 'string' ? Number(data.s.replace('%', '')) : data.s) / 100;
-      const l = (typeof data.l === 'string' ? Number(data.l.replace('%', '')) : data.l) / 100;
+    } else if (e.h || e.s || e.l) {
+      const s = (typeof e.s === 'string' ? Number(e.s.replace('%', '')) : e.s || 0) / 100;
+      const l = (typeof e.l === 'string' ? Number(e.l.replace('%', '')) : e.l || 0) / 100;
       this.valueChange.emit({
-        data: {
-          h: data.h || this.hsl.h,
-          s: s || this.hsl.s,
-          l: l || this.hsl.l,
-          a: Math.round((data.a || this.hsl.a) * 100) / 100,
-          source: 'hsl',
-        },
+        h: e.h || this.hsl.h,
+        s: s || this.hsl.s,
+        l: l || this.hsl.l,
+        a: Math.round((e.a || this.hsl.a) * 100) / 100,
+        source: 'hsl',
       });
-    } else if (data.a) {
-      let a = Math.max(0, Math.min(1, data.a));
+    } else if (e.a) {
+      let a = Math.max(0, Math.min(1, e.a));
       if (this.hideAlpha) {
         a = 1;
       }
 
       this.valueChange.emit({
-        data: {
-          h: this.hsl.h,
-          s: this.hsl.s,
-          l: this.hsl.l,
-          a: Math.round(a * 100) / 100,
-          source: 'rgb',
-        },
+        h: this.hsl.h,
+        s: this.hsl.s,
+        l: this.hsl.l,
+        a: Math.round(a * 100) / 100,
+        source: 'rgb',
       });
     }
   }
