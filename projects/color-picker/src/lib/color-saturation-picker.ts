@@ -25,7 +25,7 @@ import { Color, HSLA, HSVA, HSVAsource } from './interfaces';
       [style.background-color]="bgColor"
     >
       <div class="color-saturation-picker-pointer" [style.left.%]="posX" [style.top.%]="posY">
-        <button class="color-saturation-picker-thumb">
+        <button class="color-saturation-picker-thumb" type="button">
           <!--  -->
         </button>
       </div>

@@ -3,6 +3,14 @@
   display: block;
   width: var(--cp-slider-width, auto);
   height: var(--cp-slider-height, 10px);
+  border-radius: var(--cp-slider-shape, 2px);
+  background-image: linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+
+  &.color-hue-vertical {
+    width: var(--cp-slider-width, 10px);
+    height: var(--cp-slider-height, auto);
+    background-image: linear-gradient(to top, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%);
+  }
 }
 
 .color-hue-slider-track {
@@ -24,8 +32,7 @@
   padding: 0;
   border: none;
   border-radius: var(--cp-slider-thumb-shape, 6px);
-  transform: translate(-50%,
-      calc((var(--cp-slider-thumb-height, 12px) - var(--cp-slider-height, 10px)) / -2));
+  transform: translate(-50%, calc((var(--cp-slider-thumb-height, 12px) - var(--cp-slider-height, 10px)) / -2));
   background-color: var(--cp-slider-thumb-background-color, #f2f2f2);
   outline: 1px solid var(--cp-slider-thumb-outline-color, #f2f2f2);
   outline-offset: -1px;
@@ -34,26 +41,8 @@
   &:focus-visible {
     outline-color: var(--cp-input-focus-outline-color);
   }
-}
 
-.color-hue-horizontal {
-  background: linear-gradient(to right,
-      #f00 0%,
-      #ff0 17%,
-      #0f0 33%,
-      #0ff 50%,
-      #00f 67%,
-      #f0f 83%,
-      #f00 100%);
-}
-
-.color-hue-vertical {
-  background: linear-gradient(to top,
-      #f00 0%,
-      #ff0 17%,
-      #0f0 33%,
-      #0ff 50%,
-      #00f 67%,
-      #f0f 83%,
-      #f00 100%);
+  .color-hue-vertical & {
+    transform: translate(calc((var(--cp-slider-thumb-width, 12px) - var(--cp-slider-width, 10px)) / -2), -50%);
+  }
 }

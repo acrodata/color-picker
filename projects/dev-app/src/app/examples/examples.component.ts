@@ -1,10 +1,17 @@
-import { ColorFormat, ColorPicker } from '@acrodata/color-picker';
+import {
+  ColorAlphaSlider,
+  ColorFormat,
+  ColorHueSlider,
+  ColorPicker,
+  ColorSaturationPicker,
+  parseColor,
+} from '@acrodata/color-picker';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-examples',
-  imports: [ColorPicker, FormsModule],
+  imports: [FormsModule, ColorPicker, ColorSaturationPicker, ColorHueSlider, ColorAlphaSlider],
   templateUrl: './examples.component.html',
   styleUrl: './examples.component.scss',
 })
@@ -19,5 +26,10 @@ export class ExamplesComponent {
 
   log(type: string, e: any) {
     console.log(type, e);
+  }
+
+  colorObj = parseColor(this.color);
+  onColorChange(e: { data: any }) {
+    this.colorObj = parseColor(e.data);
   }
 }

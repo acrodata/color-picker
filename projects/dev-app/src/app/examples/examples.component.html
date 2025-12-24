@@ -42,3 +42,19 @@
 
 <color-picker [(color)]="color3" />
 <textarea [(ngModel)]="color3"></textarea>
+
+<div class="flex">
+  <div class="box">
+    <color-saturation-picker [color]="colorObj" (change)="onColorChange($event)" />
+  </div>
+
+  <div class="box flex flex-column">
+    <color-hue-slider [color]="colorObj" (change)="onColorChange($event)" />
+    <color-alpha-slider [color]="colorObj" (change)="onColorChange($event)" />
+  </div>
+
+  <div class="box flex">
+    <color-hue-slider direction="vertical" [color]="colorObj" (change)="onColorChange($event)" />
+    <color-alpha-slider direction="vertical" [color]="colorObj" (change)="onColorChange($event)" />
+  </div>
+</div>

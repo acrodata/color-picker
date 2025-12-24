@@ -1,0 +1,14 @@
+.flex {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.box {
+  width: 200px;
+  height: 200px;
+}

@@ -15,16 +15,15 @@ import { Color, HSLA, HSLAsource, RGBA } from './interfaces';
   imports: [ColorCoordinates],
   template: `
     <div
+      class="color-alpha-slider-track"
+      [style.background-image]="gradient"
       colorCoordinates
       [percentX]="posX"
       [percentY]="posY"
       (coordinatesChange)="handleChange($event)"
-      class="color-alpha-slider-track color-alpha-{{ direction }}"
     >
-      <div class="color-alpha-gradient" [style.background]="gradient"></div>
-
       <div class="color-alpha-slider-pointer" [style.left.%]="posX" [style.top.%]="posY">
-        <button class="color-alpha-slider-thumb">
+        <button class="color-alpha-slider-thumb" type="button">
           <!--  -->
         </button>
       </div>
@@ -32,7 +31,9 @@ import { Color, HSLA, HSLAsource, RGBA } from './interfaces';
   `,
   styleUrl: './color-alpha-slider.scss',
   host: {
-    class: 'color-alpha-slider',
+    'class': 'color-alpha-slider',
+    '[class.color-alpha-vertical]': 'direction === "vertical"',
+    '[class.color-alpha-horizontal]': 'direction === "horizontal"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,9 +59,9 @@ export class ColorAlphaSlider implements OnChanges {
 
     const { r, g, b, a } = this.rgb;
     if (this.direction === 'vertical') {
-      this.gradient = `linear-gradient(to bottom, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
+      this.gradient = `linear-gradient(to top, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
       this.posX = null;
-      this.posY = a * 100;
+      this.posY = (1 - a) * 100;
     } else {
       this.gradient = `linear-gradient(to right, rgba(${r},${g},${b}, 0) 0%, rgba(${r},${g},${b}, 1) 100%)`;
       this.posY = null;
@@ -76,7 +77,8 @@ export class ColorAlphaSlider implements OnChanges {
     const size = isVertical ? containerHeight : containerWidth;
 
     const ratio = Math.max(0, Math.min(pos, size)) / size;
-    const a = Math.round(ratio * 100) / 100;
+    const alpha = isVertical ? 1 - ratio : ratio;
+    const a = Math.round(alpha * 100) / 100;
 
     if (this.hsl.a !== a) {
       const data: HSLAsource = { ...this.hsl, a, source: 'rgb' };

@@ -15,14 +15,14 @@ import { Color, HSLA, HSLAsource } from './interfaces';
   imports: [ColorCoordinates],
   template: `
     <div
+      class="color-hue-slider-track"
       colorCoordinates
       [percentX]="posX"
       [percentY]="posY"
       (coordinatesChange)="handleChange($event)"
-      class="color-hue-slider-track color-hue-{{ direction }}"
     >
       <div class="color-hue-slider-pointer" [style.left.%]="posX" [style.top.%]="posY">
-        <button class="color-hue-slider-thumb">
+        <button class="color-hue-slider-thumb" type="button">
           <!--  -->
         </button>
       </div>
@@ -30,7 +30,9 @@ import { Color, HSLA, HSLAsource } from './interfaces';
   `,
   styleUrl: './color-hue-slider.scss',
   host: {
-    class: 'color-hue-slider',
+    'class': 'color-hue-slider',
+    '[class.color-hue-vertical]': 'direction === "vertical"',
+    '[class.color-hue-horizontal]': 'direction === "horizontal"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,8 +69,8 @@ export class ColorHueSlider implements OnChanges {
     const size = isVertical ? containerHeight : containerWidth;
 
     const ratio = Math.max(0, Math.min(pos, size)) / size;
-    let h = isVertical ? (1 - ratio) * 360 : ratio * 360;
-    h = h >= 360 ? 359 : h;
+    const hue = isVertical ? (1 - ratio) * 360 : ratio * 360;
+    const h = hue >= 360 ? 359 : hue;
 
     if (this.hsl.h !== h) {
       const data: HSLAsource = { ...this.hsl, h, source: 'rgb' };
