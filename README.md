@@ -46,7 +46,7 @@ export class YourAppComponent {
 | -------------- | --------------------------- | ----------- | ----------------------------------------------- |
 | [color]        | string                      | `#000`      | The initial color string.                       |
 | [format]       | ColorFormat                 | `undefined` | The output format of the color picker.          |
-| [disableAlpha] | boolean                     | `false`     | Whether to hide the alpha channel.              |
+| [hideAlpha] | boolean                     | `false`     | Whether to hide the alpha channel.              |
 | (colorChange)  | EventEmitter\<string\>      | `-`         | Event emitted when the color string changes.    |
 | (valueChange)  | EventEmitter\<ColorEvent\>  | `-`         | Event emitted when the color value changes.     |
 | (formatChange) | EventEmitter\<ColorFormat\> | `-`         | Event emitted when the color format is changed. |
@@ -81,6 +81,8 @@ export class YourAppComponent {
 --cp-saturation-picker-thumb-size
 --cp-saturation-picker-thumb-shape
 --cp-saturation-picker-thumb-shadow
+--cp-saturation-picker-thumb-outline-color
+--cp-saturation-picker-thumb-focus-outline-color
 
 --cp-slider-width
 --cp-slider-height
@@ -90,6 +92,8 @@ export class YourAppComponent {
 --cp-slider-thumb-shape
 --cp-slider-thumb-background-color
 --cp-slider-thumb-shadow
+--cp-slider-thumb-outline-color
+--cp-slider-thumb-focus-outline-color
 ```
 
 ## License

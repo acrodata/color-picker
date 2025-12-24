@@ -6,7 +6,10 @@
   --cp-input-focus-outline-color: light-dark(#0d99ff, #0c8ce9);
   --cp-icon-button-hover-background-color: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.06));
   --cp-icon-button-active-background-color: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.12));
+  --cp-slider-thumb-background-color: light-dark(#f2f2f2, #3c3c3c);
+  --cp-slider-thumb-outline-color: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.24));
 
+  box-sizing: border-box;
   display: block;
   width: var(--cp-container-width, 240px);
   padding: var(--cp-container-padding, 12px);
@@ -36,6 +39,7 @@
   overflow: hidden;
   border: none;
   outline: none;
+  background-color: #fff;
   background-image: conic-gradient(transparent 25%, #ccc 25% 50%, transparent 50% 75%, #ccc 75%);
   background-size: 10px 10px;
   box-shadow:

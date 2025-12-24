@@ -31,12 +31,12 @@
   border-radius: var(--cp-saturation-picker-thumb-shape, 6px);
   border: none;
   background: none;
-  outline: 1px solid #fff;
+  outline: 1px solid var(--cp-saturation-picker-thumb-outline-color, #fff);
   outline-offset: -1px;
   transform: translate(-50%, -50%);
   box-shadow: var(--cp-saturation-picker-thumb-shadow, 0 2px 6px 0 rgba(0, 0, 0, 0.32));
 
   &:focus-visible {
-    outline-color: var(--cp-input-focus-outline-color);
+    outline-color: var(--cp-saturation-picker-thumb-focus-outline-color, var(--cp-input-focus-outline-color, #0d99ff));
   }
 }

@@ -34,12 +34,11 @@
   border-radius: var(--cp-slider-thumb-shape, 6px);
   transform: translate(-50%, calc((var(--cp-slider-thumb-height, 12px) - var(--cp-slider-height, 10px)) / -2));
   background-color: var(--cp-slider-thumb-background-color, #f2f2f2);
-  outline: 1px solid var(--cp-slider-thumb-outline-color, #f2f2f2);
-  outline-offset: -1px;
+  outline: 1px solid var(--cp-slider-thumb-outline-color, rgba(0, 0, 0, 0.04));
   box-shadow: var(--cp-slider-thumb-shadow, 0 1px 4px 0 rgba(0, 0, 0, 0.32), 0 2px 8px 0 rgba(0, 0, 0, 0.16));
 
   &:focus-visible {
-    outline-color: var(--cp-input-focus-outline-color);
+    outline-color: var(--cp-slider-thumb-focus-outline-color, var(--cp-input-focus-outline-color, #0d99ff));
   }
 
   .color-hue-vertical & {
