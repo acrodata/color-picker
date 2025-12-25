@@ -20,7 +20,7 @@ import { ColorHueSlider } from './color-hue-slider';
 import { ColorIconButton } from './color-icon-button';
 import { ColorInputFields } from './color-input-fields';
 import { ColorSaturationPicker } from './color-saturation-picker';
-import { Color, ColorChangeEvent, ColorFormat, ColorSource, HSLA } from './interfaces';
+import { Color, ColorChange, ColorFormat, ColorSource, HSLA } from './interfaces';
 import { parseColor, simpleCheckForValidColor } from './utils';
 
 @Component({
@@ -57,54 +57,77 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
   @Output() formatChange = new EventEmitter<ColorFormat>();
 
   /** The initial color string. */
-  @Input() color = '#000';
+  @Input() value = '#000';
 
-  /** Event emitted when the color string changes. */
-  @Output() colorChange = new EventEmitter<string>();
+  /** Event emitted when the value changes. */
+  @Output() valueChange = new EventEmitter<string>();
 
-  /** Event emitted when the color value changes. */
-  @Output() valueChange = new EventEmitter<ColorChangeEvent>();
+  /**
+   * The initial color which allow to pass either object or string.
+   * @deprecated Use `value` property instead.
+   */
+  @Input() color: any = { value: '#000' };
+
+  /**
+   * Event emitted when the color changes.
+   * The output value depends on the type of `color` input.
+   */
+  @Output() colorChange = new EventEmitter<any>();
 
   /** Whether to hide the alpha channel. */
   @Input({ transform: booleanAttribute }) hideAlpha = false;
 
-  /** Whether the color-picker is disabled. */
+  /** Whether the color picker is disabled. */
   @Input({ transform: booleanAttribute }) disabled = false;
 
-  private onChange: (value: string) => void = () => {};
-  private onTouched: () => void = () => {};
+  parsedColor!: Color;
 
-  colorData!: Color;
-  oldHue = 0;
-  oldColor = '';
+  private oldHue = 0;
+
+  private oldValue = '';
 
   EyeDropper = (window as any).EyeDropper;
   supportEyeDropper = !!this.EyeDropper;
 
   isCopied = false;
 
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
+
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['format'] || changes['color']) {
+    if (changes['format']) {
       this.getColorFormat();
     }
-    if (changes['color'] && this.color !== this.oldColor) {
-      this.getColorData(this.color, this.oldHue);
+
+    if (changes['value']) {
+      this.getColorFormat();
+      if (this.value !== this.oldValue) {
+        this.getParsedColor(this.value, this.oldHue);
+      }
+    }
+
+    if (changes['color']) {
+      this.value = typeof this.color === 'string' ? this.color : this.color?.value;
+      this.getColorFormat();
+      if (this.value !== this.oldValue) {
+        this.getParsedColor(this.value, this.oldHue);
+      }
     }
   }
 
   ngOnInit() {
-    this.getColorData(this.color);
+    this.getParsedColor(this.value);
   }
 
   writeValue(value: any): void {
     if (value) {
-      this.color = value;
+      this.value = value;
       this.getColorFormat();
-      this.getColorData(this.color, this.oldHue);
+      this.getParsedColor(value, this.oldHue);
     }
   }
 
-  registerOnChange(fn: (color: string) => void): void {
+  registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
   }
 
@@ -117,26 +140,33 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
     this.cdr.markForCheck();
   }
 
-  getColorData(data: any, oldHue = 0) {
-    this.colorData = parseColor(data, oldHue, this.hideAlpha);
-    this.oldHue = this.colorData.oldHue;
+  getParsedColor(data: any, oldHue = 0) {
+    this.parsedColor = parseColor(data, oldHue, this.hideAlpha);
+    this.oldHue = this.parsedColor.oldHue;
     this.cdr.markForCheck();
   }
 
   handleChange(e: ColorSource) {
     const isValidColor = simpleCheckForValidColor(e);
     if (isValidColor) {
-      this.getColorData(e, (e as HSLA).h || this.oldHue);
-      this.getColorString(this.colorData);
-      this.onChange(this.color);
-      this.colorChange.emit(this.color);
-      this.valueChange.emit({ value: this.color, color: this.colorData });
+      this.getParsedColor(e, (e as HSLA).h || this.oldHue);
+      this.getColorString(this.parsedColor);
+
+      this.onChange(this.value);
+
+      this.valueChange.emit(this.value);
+
+      const outputColor =
+        typeof this.color === 'string'
+          ? this.value
+          : { ...this.color, value: this.value, color: this.parsedColor };
+      this.colorChange.emit(outputColor);
     }
   }
 
   getColorFormat() {
     if (!this.format) {
-      const color = new TinyColor(this.color);
+      const color = new TinyColor(this.value);
       if (color.format === 'rgb' || color.format === 'hsl' || color.format === 'hsv') {
         this.format = color.format;
       } else {
@@ -149,19 +179,19 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
   getColorString(color: Color) {
     switch (this.format) {
       case 'rgb':
-        this.color = color.rgbString;
+        this.value = color.rgbString;
         break;
       case 'hsl':
-        this.color = color.hslString;
+        this.value = color.hslString;
         break;
       case 'hsv':
-        this.color = color.hsvString;
+        this.value = color.hsvString;
         break;
       default:
-        this.color = color.hex;
+        this.value = color.hex;
         break;
     }
-    this.oldColor = this.color;
+    this.oldValue = this.value;
     this.cdr.markForCheck();
   }
 
@@ -181,7 +211,7 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
 
   async copyColor() {
     try {
-      await navigator.clipboard.writeText(this.color);
+      await navigator.clipboard.writeText(this.value);
 
       this.isCopied = true;
       this.cdr.markForCheck();

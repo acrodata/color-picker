@@ -31,7 +31,7 @@ import { ColorPicker } from '@acrodata/color-picker';
   selector: 'your-app',
   template: `
     <color-picker [(ngModel)]="color" />
-    <color-picker [(color)]="color" />
+    <color-picker [(value)]="color" />
   `,
   imports: [FormsModule, ColorPicker],
 })
@@ -42,14 +42,13 @@ export class YourAppComponent {
 
 ## API
 
-| Name           | Type                        | Default     | Description                                     |
-| -------------- | --------------------------- | ----------- | ----------------------------------------------- |
-| [color]        | string                      | `#000`      | The initial color string.                       |
-| [format]       | ColorFormat                 | `undefined` | The output format of the color picker.          |
-| [hideAlpha] | boolean                     | `false`     | Whether to hide the alpha channel.              |
-| (colorChange)  | EventEmitter\<string\>      | `-`         | Event emitted when the color string changes.    |
-| (valueChange)  | EventEmitter\<ColorEvent\>  | `-`         | Event emitted when the color value changes.     |
-| (formatChange) | EventEmitter\<ColorFormat\> | `-`         | Event emitted when the color format is changed. |
+| Name           | Type                        | Default     | Description                               |
+| -------------- | --------------------------- | ----------- | ----------------------------------------- |
+| [value]        | string                      | `#000`      | The initial color string.                 |
+| [format]       | ColorFormat                 | `undefined` | The output format of the color picker.    |
+| [hideAlpha]    | boolean                     | `false`     | Whether to hide the alpha channel.        |
+| (valueChange)  | EventEmitter\<string\>      | `-`         | Event emitted when the value changes.     |
+| (formatChange) | EventEmitter\<ColorFormat\> | `-`         | Event emitted when the format is changed. |
 
 ## CSS Variables
 

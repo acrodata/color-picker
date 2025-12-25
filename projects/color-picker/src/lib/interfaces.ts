@@ -61,7 +61,7 @@ export interface Color {
 
 export type ColorFormat = 'hex' | 'rgb' | 'hsl' | 'hsv';
 
-export interface ColorChangeEvent {
+export interface ColorChange {
   value: string;
   color: Color;
 }

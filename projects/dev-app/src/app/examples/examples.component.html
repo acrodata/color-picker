@@ -26,23 +26,56 @@
   </label>
 </div>
 
-<color-picker
-  [hideAlpha]="hideAlpha"
-  [(format)]="format"
-  [(ngModel)]="color"
-  (ngModelChange)="log('ngModelChange', $event)"
-  (colorChange)="log('colorChange', $event)"
-  (valueChange)="log('valueChange', $event)"
-  (valueChanged)="log('valueChanged', $event)"
-/>
-<textarea [(ngModel)]="color"></textarea>
+<div class="flex">
+  <div>
+    <h3>binding ngModel</h3>
+    <color-picker
+      [hideAlpha]="hideAlpha"
+      [(format)]="format"
+      [(ngModel)]="color"
+      (ngModelChange)="log('ngModelChange', $event)"
+      (valueChange)="log('valueChange', $event)"
+      (colorChange)="log('colorChange', $event)"
+      (change)="log('change', $event)"
+    />
+    <textarea [(ngModel)]="color"></textarea>
+  </div>
 
-<color-picker [(ngModel)]="color2" />
-<textarea [(ngModel)]="color2"></textarea>
+  <div>
+    <h3>binding value</h3>
+    <color-picker
+      [format]="format"
+      [(value)]="color2"
+      (valueChange)="log('valueChange', $event)"
+      (colorChange)="log('colorChange', $event)"
+    />
+    <textarea [(ngModel)]="color2"></textarea>
+  </div>
 
-<color-picker [(color)]="color3" />
-<textarea [(ngModel)]="color3"></textarea>
+  <div>
+    <h3>binding color string</h3>
+    <color-picker
+      [format]="format"
+      [(color)]="color3"
+      (valueChange)="log('valueChange', $event)"
+      (colorChange)="log('colorChange', $event)"
+    />
+    <textarea [(ngModel)]="color3"></textarea>
+  </div>
 
+  <div>
+    <h3>binding color object</h3>
+    <color-picker
+      [format]="format"
+      [(color)]="color4"
+      (valueChange)="log('valueChange', $event)"
+      (colorChange)="log('colorChange', $event)"
+    />
+    <textarea [ngModel]="color4.value" (ngModelChange)="color4 = { value: $event }"></textarea>
+  </div>
+</div>
+
+<h3>color picker components</h3>
 <div class="flex">
   <div class="box">
     <color-saturation-picker [color]="colorObj" (change)="onColorChange($event)" />

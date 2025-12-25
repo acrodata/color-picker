@@ -18,8 +18,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class ExamplesComponent {
   color = '#ff000060';
-  color2 = 'rgba(200, 100, 100, 1)';
+  color2 = 'rgba(255, 160, 0, 1)';
   color3 = 'hsla(200, 100%, 50%, 1)';
+  color4 = { value: '#00ff00' };
 
   format: ColorFormat = 'hex';
 

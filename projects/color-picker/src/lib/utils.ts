@@ -24,6 +24,10 @@ export function simpleCheckForValidColor(data: any) {
 }
 
 export function parseColor(data: any, oldHue = 0, hideAlpha = false): Color {
+  if (data == null) {
+    data = {};
+  }
+
   const color = data.hex ? new TinyColor(data.hex) : new TinyColor(data);
   if (hideAlpha) {
     color.setAlpha(1);

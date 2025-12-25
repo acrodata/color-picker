@@ -1,4 +1,4 @@
-<color-saturation-picker [color]="colorData" (change)="handleChange($event)" />
+<color-saturation-picker [color]="parsedColor" (change)="handleChange($event)" />
 
 <div class="color-picker-controls">
   @if (supportEyeDropper) {
@@ -15,7 +15,7 @@
   }
 
   <button class="color-preview" type="button" (click)="copyColor()">
-    <div class="color-preview-bg" [style.background-color]="color"></div>
+    <div class="color-preview-bg" [style.background-color]="value"></div>
     <div class="color-preview-backdrop">
       @if (this.isCopied) {
         <svg viewBox="0 0 24 24">
@@ -33,17 +33,17 @@
   </button>
 
   <div class="color-hue-alpha">
-    <color-hue-slider [color]="colorData" (change)="handleChange($event)" />
+    <color-hue-slider [color]="parsedColor" (change)="handleChange($event)" />
 
     @if (!hideAlpha) {
-      <color-alpha-slider [color]="colorData" (change)="handleChange($event)" />
+      <color-alpha-slider [color]="parsedColor" (change)="handleChange($event)" />
     }
   </div>
 </div>
 
 <div class="color-picker-controls">
   <color-input-fields
-    [color]="colorData"
+    [color]="parsedColor"
     [hideAlpha]="hideAlpha"
     [(format)]="format"
     (valueChange)="handleChange($event)"

@@ -1,5 +1,5 @@
 <section>
-  <color-picker [(color)]="color" />
+  <color-picker [(value)]="color" />
 
   <div class="input-group">
     <button
@@ -21,5 +21,5 @@
   (overlayOutsideClick)="isOpen = false"
   (detach)="isOpen = false"
 >
-  <color-picker [(color)]="color" />
+  <color-picker [(value)]="color" />
 </ng-template>
