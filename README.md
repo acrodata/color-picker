@@ -42,13 +42,14 @@ export class YourAppComponent {
 
 ## API
 
-| Name           | Type                        | Default     | Description                               |
-| -------------- | --------------------------- | ----------- | ----------------------------------------- |
-| [value]        | string                      | `#000`      | The initial color string.                 |
-| [format]       | ColorFormat                 | `undefined` | The output format of the color picker.    |
-| [hideAlpha]    | boolean                     | `false`     | Whether to hide the alpha channel.        |
-| (valueChange)  | EventEmitter\<string\>      | `-`         | Event emitted when the value changes.     |
-| (formatChange) | EventEmitter\<ColorFormat\> | `-`         | Event emitted when the format is changed. |
+| Name           | Type                        | Default     | Description                                     |
+| -------------- | --------------------------- | ----------- | ----------------------------------------------- |
+| [value]        | string                      | `#000`      | The initial color string.                       |
+| [format]       | ColorFormat                 | `undefined` | The output format of the color picker.          |
+| [hideAlpha]    | boolean                     | `false`     | Whether to hide the alpha channel.              |
+| (valueChange)  | EventEmitter\<string\>      | `-`         | Event emitted when the value changes.           |
+| (formatChange) | EventEmitter\<ColorFormat\> | `-`         | Event emitted when the color format is changed. |
+| (colorChange)  | EventEmitter\<ColorChange\> | `-`         | Event emitted when the color changes.           |
 
 ## CSS Variables
 

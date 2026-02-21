@@ -63,16 +63,9 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
   @Output() valueChange = new EventEmitter<string>();
 
   /**
-   * The initial color which allow to pass either object or string.
-   * @deprecated Use `value` property instead.
-   */
-  @Input() color: any = { value: '#000' };
-
-  /**
    * Event emitted when the color changes.
-   * The output value depends on the type of `color` input.
    */
-  @Output() colorChange = new EventEmitter<any>();
+  @Output() colorChange = new EventEmitter<ColorChange>();
 
   /** Whether to hide the alpha channel. */
   @Input({ transform: booleanAttribute }) hideAlpha = false;
@@ -100,14 +93,6 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
     }
 
     if (changes['value']) {
-      this.getColorFormat();
-      if (this.value !== this.oldValue) {
-        this.getParsedColor(this.value, this.oldHue);
-      }
-    }
-
-    if (changes['color']) {
-      this.value = typeof this.color === 'string' ? this.color : this.color?.value;
       this.getColorFormat();
       if (this.value !== this.oldValue) {
         this.getParsedColor(this.value, this.oldHue);
@@ -156,11 +141,7 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
 
       this.valueChange.emit(this.value);
 
-      const outputColor =
-        typeof this.color === 'string'
-          ? this.value
-          : { ...this.color, value: this.value, color: this.parsedColor };
-      this.colorChange.emit(outputColor);
+      this.colorChange.emit({ value: this.value, color: this.parsedColor });
     }
   }
 

@@ -51,28 +51,6 @@
     />
     <textarea [(ngModel)]="color2"></textarea>
   </div>
-
-  <div>
-    <h3>binding color string</h3>
-    <color-picker
-      [format]="format"
-      [(color)]="color3"
-      (valueChange)="log('valueChange', $event)"
-      (colorChange)="log('colorChange', $event)"
-    />
-    <textarea [(ngModel)]="color3"></textarea>
-  </div>
-
-  <div>
-    <h3>binding color object</h3>
-    <color-picker
-      [format]="format"
-      [(color)]="color4"
-      (valueChange)="log('valueChange', $event)"
-      (colorChange)="log('colorChange', $event)"
-    />
-    <textarea [ngModel]="color4.value" (ngModelChange)="color4 = { value: $event }"></textarea>
-  </div>
 </div>
 
 <h3>color picker components</h3>
