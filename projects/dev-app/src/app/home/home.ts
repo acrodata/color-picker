@@ -6,10 +6,10 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-home',
   imports: [FormsModule, ColorPicker, CdkConnectedOverlay, CdkOverlayOrigin],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  templateUrl: './home.html',
+  styleUrl: './home.scss',
 })
-export class HomeComponent {
+export class Home {
   color = '#ff0000';
 
   isOpen = false;

@@ -13,10 +13,10 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-examples',
   imports: [FormsModule, ColorPicker, ColorSaturationPicker, ColorHueSlider, ColorAlphaSlider],
-  templateUrl: './examples.component.html',
-  styleUrl: './examples.component.scss',
+  templateUrl: './examples.html',
+  styleUrl: './examples.scss',
 })
-export class ExamplesComponent {
+export class Examples {
   color = '#ff000060';
   color2 = 'rgba(255, 160, 0, 1)';
 
