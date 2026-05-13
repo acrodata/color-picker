@@ -1,6 +1,6 @@
 import { ColorPicker } from '@acrodata/color-picker';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,7 +10,15 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './home.scss',
 })
 export class Home {
-  color = '#ff0000';
+  color = signal('#ff0000');
 
-  isOpen = false;
+  isOpen = signal(false);
+
+  toggleMenu() {
+    this.isOpen.update(v => !v);
+  }
+
+  closeMenu() {
+    this.isOpen.set(false);
+  }
 }

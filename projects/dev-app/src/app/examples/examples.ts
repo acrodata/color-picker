@@ -7,7 +7,7 @@ import {
   ColorSource,
   parseColor,
 } from '@acrodata/color-picker';
-import { Component } from '@angular/core';
+import { Component, linkedSignal, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -17,19 +17,20 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './examples.scss',
 })
 export class Examples {
-  color = '#ff000060';
-  color2 = 'rgba(255, 160, 0, 1)';
+  color = signal('#ff000060');
+  color2 = signal('rgba(255, 160, 0, 1)');
 
-  format: ColorFormat = 'hex';
+  format = signal<ColorFormat>('hex');
 
-  hideAlpha = false;
+  hideAlpha = signal(false);
+
+  colorObj = linkedSignal(() => parseColor(this.color()));
+
+  onColorChange(e: ColorSource) {
+    this.colorObj.set(parseColor(e));
+  }
 
   log(type: string, e: any) {
     console.log(type, e);
-  }
-
-  colorObj = parseColor(this.color);
-  onColorChange(e: ColorSource) {
-    this.colorObj = parseColor(e);
   }
 }
