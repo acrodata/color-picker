@@ -14,6 +14,12 @@ Another beautiful color picker
 [Documentation](https://github.com/acrodata/color-picker?tab=readme-ov-file#color-picker) |
 [Playground](https://acrodata.github.io/color-picker/)
 
+## Compatibility
+
+| Angular | @acrodata/color-picker |
+| ------- | ---------------------- |
+| >=17    | 1.x                    |
+
 ## Installation
 
 ```bash
