@@ -45,6 +45,7 @@ export class ColorSaturationPicker implements OnChanges {
   @Input() color!: Color;
 
   @Output() change = new EventEmitter<HSVAsource>();
+  @Output() changeComplete = new EventEmitter<HSVAsource>();
 
   hsl!: HSLA;
   hsv!: HSVA;
@@ -64,12 +65,17 @@ export class ColorSaturationPicker implements OnChanges {
   }
 
   handleChange(e: CoordinatesChangeEvent) {
-    const { top, left, containerHeight, containerWidth } = e;
+    const { top, left, containerHeight, containerWidth, type } = e;
 
     const s = Math.max(0, Math.min(left, containerWidth)) / containerWidth;
     const v = 1 - Math.max(0, Math.min(top, containerHeight)) / containerHeight;
 
-    this.change.emit({ ...this.hsv, s, v, source: 'hsva' });
+    if (this.hsv.s !== s || this.hsv.v !== v) {
+      this.change.emit({ ...this.hsv, s, v, source: 'hsva' });
+    }
+    if (type === 'pointerup') {
+      this.changeComplete.emit({ ...this.hsv, s, v, source: 'hsva' });
+    }
   }
 
   // Fix the Focus-induced Scroll issue

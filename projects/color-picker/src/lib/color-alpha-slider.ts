@@ -44,6 +44,7 @@ export class ColorAlphaSlider implements OnChanges {
   @Input() direction: 'horizontal' | 'vertical' = 'horizontal';
 
   @Output() change = new EventEmitter<HSLAsource>();
+  @Output() changeComplete = new EventEmitter<HSLAsource>();
 
   hsl!: HSLA;
   rgb!: RGBA;
@@ -70,7 +71,7 @@ export class ColorAlphaSlider implements OnChanges {
   }
 
   handleChange(e: CoordinatesChangeEvent) {
-    const { top, left, containerHeight, containerWidth } = e;
+    const { top, left, containerHeight, containerWidth, type } = e;
 
     const isVertical = this.direction === 'vertical';
     const pos = isVertical ? top : left;
@@ -82,6 +83,9 @@ export class ColorAlphaSlider implements OnChanges {
 
     if (this.hsl.a !== a) {
       this.change.emit({ ...this.hsl, a, source: 'rgb' });
+    }
+    if (type === 'pointerup') {
+      this.changeComplete.emit({ ...this.hsl, a, source: 'rgb' });
     }
   }
 }

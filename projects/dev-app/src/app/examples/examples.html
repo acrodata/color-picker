@@ -52,6 +52,18 @@
     />
     <textarea [(ngModel)]="color2"></textarea>
   </div>
+
+  <div>
+    <h3>value change complete</h3>
+    <color-picker
+      [hideAlpha]="hideAlpha()"
+      [format]="format()"
+      [(value)]="color2"
+      (valueChangeComplete)="log('valueChangeComplete', $event)"
+      (colorChangeComplete)="log('colorChangeComplete', $event)"
+    />
+    <textarea [(ngModel)]="color2"></textarea>
+  </div>
 </div>
 
 <h3>color picker components</h3>

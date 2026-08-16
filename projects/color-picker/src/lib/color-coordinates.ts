@@ -1,12 +1,13 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { distinctUntilChanged, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 export interface CoordinatesChangeEvent {
   containerWidth: number;
   containerHeight: number;
   left: number;
   top: number;
+  type: string;
 }
 
 @Directive({
@@ -28,12 +29,7 @@ export class ColorCoordinates implements OnInit, OnDestroy {
   private pointerSub = Subscription.EMPTY;
 
   ngOnInit() {
-    this.pointerSub = this.pointerChange
-      .pipe(
-        // limit times it is updated for the same area
-        distinctUntilChanged((p, q) => p.x === q.x && p.y === q.y)
-      )
-      .subscribe(n => this.handleChange(n));
+    this.pointerSub = this.pointerChange.subscribe(n => this.handleChange(n));
   }
 
   ngOnDestroy() {
@@ -53,6 +49,7 @@ export class ColorCoordinates implements OnInit, OnDestroy {
   };
 
   onDragEnd = (e: PointerEvent) => {
+    this.pointerChange.next(e);
     this.document.removeEventListener('pointermove', this.onDrag);
     this.document.removeEventListener('pointerup', this.onDragEnd);
   };
@@ -118,7 +115,7 @@ export class ColorCoordinates implements OnInit, OnDestroy {
       }
     }
 
-    this.handleChange({ clientX: vX, clientY: vY } as PointerEvent);
+    this.handleChange({ clientX: vX, clientY: vY, type: 'pointerup' } as PointerEvent);
   }
 
   handleChange(e: PointerEvent) {
@@ -126,7 +123,7 @@ export class ColorCoordinates implements OnInit, OnDestroy {
     const containerWidth = containerRect.width;
     const containerHeight = containerRect.height;
 
-    const { clientX, clientY } = e;
+    const { clientX, clientY, type } = e;
     const left = clientX - containerRect.left;
     const top = clientY - containerRect.top;
 
@@ -135,6 +132,7 @@ export class ColorCoordinates implements OnInit, OnDestroy {
       containerHeight,
       left,
       top,
+      type,
     });
   }
 }

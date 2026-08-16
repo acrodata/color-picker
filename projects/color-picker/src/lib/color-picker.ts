@@ -62,10 +62,16 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
   /** Event emitted when the value changes. */
   @Output() valueChange = new EventEmitter<string>();
 
+  /** Event emitted when the value changes complete. */
+  @Output() valueChangeComplete = new EventEmitter<string>();
+
   /**
    * Event emitted when the color changes.
    */
   @Output() colorChange = new EventEmitter<ColorChange>();
+
+  /** Event emitted when the color changes complete. */
+  @Output() colorChangeComplete = new EventEmitter<ColorChange>();
 
   /** Whether to hide the alpha channel. */
   @Input({ transform: booleanAttribute }) hideAlpha = false;
@@ -138,11 +144,22 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
       this.getColorString(this.parsedColor);
 
       this.onChange(this.value);
-
       this.valueChange.emit(this.value);
-
       this.colorChange.emit({ value: this.value, color: this.parsedColor });
     }
+  }
+
+  handleChangeComplete(e: ColorSource) {
+    const isValidColor = simpleCheckForValidColor(e);
+    if (isValidColor) {
+      this.valueChangeComplete.emit(this.value);
+      this.colorChangeComplete.emit({ value: this.value, color: this.parsedColor });
+    }
+  }
+
+  handleInputChange(e: ColorSource) {
+    this.handleChange(e);
+    this.handleChangeComplete(e);
   }
 
   getColorFormat() {
@@ -185,6 +202,7 @@ export class ColorPicker implements OnInit, OnChanges, ControlValueAccessor {
     try {
       const result = await eyeDropper.open();
       this.handleChange({ hex: result.sRGBHex, source: 'rgb' });
+      this.handleChangeComplete({ hex: result.sRGBHex, source: 'rgb' });
     } catch (err) {
       console.warn(err);
     }
